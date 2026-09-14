@@ -3009,7 +3009,9 @@ export type Database = {
           board: string | null
           created_at: string
           education: string | null
+          equipped_badge: string | null
           equipped_frame: string | null
+          equipped_name_style: string | null
           guest_id: string
           interests: string | null
           klass: string | null
@@ -3026,7 +3028,9 @@ export type Database = {
           board?: string | null
           created_at?: string
           education?: string | null
+          equipped_badge?: string | null
           equipped_frame?: string | null
+          equipped_name_style?: string | null
           guest_id: string
           interests?: string | null
           klass?: string | null
@@ -3043,7 +3047,9 @@ export type Database = {
           board?: string | null
           created_at?: string
           education?: string | null
+          equipped_badge?: string | null
           equipped_frame?: string | null
+          equipped_name_style?: string | null
           guest_id?: string
           interests?: string | null
           klass?: string | null
@@ -3054,8 +3060,22 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "profiles_equipped_badge_fk"
+            columns: ["equipped_badge"]
+            isOneToOne: false
+            referencedRelation: "ustad_shop_items"
+            referencedColumns: ["item_id"]
+          },
+          {
             foreignKeyName: "profiles_equipped_frame_fk"
             columns: ["equipped_frame"]
+            isOneToOne: false
+            referencedRelation: "ustad_shop_items"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "profiles_equipped_name_style_fk"
+            columns: ["equipped_name_style"]
             isOneToOne: false
             referencedRelation: "ustad_shop_items"
             referencedColumns: ["item_id"]
