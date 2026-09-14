@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievement_audit: {
+        Row: {
+          achievement_id: string | null
+          action: string
+          created_at: string
+          detail: Json
+          engine_version: string
+          guest_id: string
+          id: string
+          reason: string
+          source_event_id: string | null
+          source_match_id: string | null
+        }
+        Insert: {
+          achievement_id?: string | null
+          action: string
+          created_at?: string
+          detail?: Json
+          engine_version?: string
+          guest_id: string
+          id?: string
+          reason?: string
+          source_event_id?: string | null
+          source_match_id?: string | null
+        }
+        Update: {
+          achievement_id?: string | null
+          action?: string
+          created_at?: string
+          detail?: Json
+          engine_version?: string
+          guest_id?: string
+          id?: string
+          reason?: string
+          source_event_id?: string | null
+          source_match_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "achievement_audit_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "ustad_achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achievement_audit_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_configs: {
         Row: {
           config: Json
@@ -2628,6 +2682,107 @@ export type Database = {
           },
         ]
       }
+      trophy_designs: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          event_id: string | null
+          event_kind: string
+          id: string
+          theme: Json
+          title: string
+          trophy_type: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          event_id?: string | null
+          event_kind?: string
+          id?: string
+          theme?: Json
+          title: string
+          trophy_type: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          event_id?: string | null
+          event_kind?: string
+          id?: string
+          theme?: Json
+          title?: string
+          trophy_type?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      ustad_achievements: {
+        Row: {
+          awarded_at: string
+          created_at: string
+          event_id: string | null
+          event_kind: string
+          guest_id: string
+          id: string
+          level: number
+          match_id: string | null
+          metadata: Json
+          revoked_at: string | null
+          revoked_reason: string
+          source: string
+          title: string
+          type: string
+          verification_status: string
+        }
+        Insert: {
+          awarded_at?: string
+          created_at?: string
+          event_id?: string | null
+          event_kind?: string
+          guest_id: string
+          id?: string
+          level?: number
+          match_id?: string | null
+          metadata?: Json
+          revoked_at?: string | null
+          revoked_reason?: string
+          source?: string
+          title: string
+          type: string
+          verification_status?: string
+        }
+        Update: {
+          awarded_at?: string
+          created_at?: string
+          event_id?: string | null
+          event_kind?: string
+          guest_id?: string
+          id?: string
+          level?: number
+          match_id?: string | null
+          metadata?: Json
+          revoked_at?: string | null
+          revoked_reason?: string
+          source?: string
+          title?: string
+          type?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_achievements_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ustad_coin_ledger: {
         Row: {
           coins: number
@@ -2659,6 +2814,76 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "ustad_coin_ledger_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ustad_trophies: {
+        Row: {
+          achievement_id: string
+          created_at: string
+          design_code: string
+          design_id: string | null
+          design_version: number
+          engraving: Json
+          event_id: string | null
+          guest_id: string
+          id: string
+          image_reference: string | null
+          image_status: string
+          match_id: string | null
+          type: string
+        }
+        Insert: {
+          achievement_id: string
+          created_at?: string
+          design_code?: string
+          design_id?: string | null
+          design_version?: number
+          engraving?: Json
+          event_id?: string | null
+          guest_id: string
+          id?: string
+          image_reference?: string | null
+          image_status?: string
+          match_id?: string | null
+          type: string
+        }
+        Update: {
+          achievement_id?: string
+          created_at?: string
+          design_code?: string
+          design_id?: string | null
+          design_version?: number
+          engraving?: Json
+          event_id?: string | null
+          guest_id?: string
+          id?: string
+          image_reference?: string | null
+          image_status?: string
+          match_id?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_trophies_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: true
+            referencedRelation: "ustad_achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ustad_trophies_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "trophy_designs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ustad_trophies_guest_id_fkey"
             columns: ["guest_id"]
             isOneToOne: false
             referencedRelation: "guests"
