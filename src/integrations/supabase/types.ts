@@ -156,6 +156,259 @@ export type Database = {
           },
         ]
       }
+      crorepati_attempt_questions: {
+        Row: {
+          answered_at: string | null
+          answered_index: number | null
+          attempt_id: string
+          category: string
+          correct_index: number
+          created_at: string
+          difficulty: string
+          explanation: string
+          fifty_removed: Json | null
+          guest_id: string
+          hint: string
+          hint_shown: boolean
+          id: string
+          options: Json
+          question: string
+          question_number: number
+          was_correct: boolean | null
+          was_skipped: boolean
+        }
+        Insert: {
+          answered_at?: string | null
+          answered_index?: number | null
+          attempt_id: string
+          category?: string
+          correct_index: number
+          created_at?: string
+          difficulty?: string
+          explanation?: string
+          fifty_removed?: Json | null
+          guest_id: string
+          hint?: string
+          hint_shown?: boolean
+          id?: string
+          options: Json
+          question: string
+          question_number: number
+          was_correct?: boolean | null
+          was_skipped?: boolean
+        }
+        Update: {
+          answered_at?: string | null
+          answered_index?: number | null
+          attempt_id?: string
+          category?: string
+          correct_index?: number
+          created_at?: string
+          difficulty?: string
+          explanation?: string
+          fifty_removed?: Json | null
+          guest_id?: string
+          hint?: string
+          hint_shown?: boolean
+          id?: string
+          options?: Json
+          question?: string
+          question_number?: number
+          was_correct?: boolean | null
+          was_skipped?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_attempt_questions_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_attempt_questions_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crorepati_attempts: {
+        Row: {
+          answer_timer_starts_at: string | null
+          cleared_questions: number
+          coin_reward: number
+          current_question: number
+          deadline_at: string | null
+          ended_at: string | null
+          event_id: string
+          fifty_fifty_used: boolean
+          game_state: string
+          guest_id: string
+          hint_used: boolean
+          id: string
+          meta: Json
+          presented_at: string | null
+          result: string | null
+          skip_used: boolean
+          skipped_questions: number
+          started_at: string
+          status: string
+          wrong_question: number | null
+        }
+        Insert: {
+          answer_timer_starts_at?: string | null
+          cleared_questions?: number
+          coin_reward?: number
+          current_question?: number
+          deadline_at?: string | null
+          ended_at?: string | null
+          event_id: string
+          fifty_fifty_used?: boolean
+          game_state?: string
+          guest_id: string
+          hint_used?: boolean
+          id?: string
+          meta?: Json
+          presented_at?: string | null
+          result?: string | null
+          skip_used?: boolean
+          skipped_questions?: number
+          started_at?: string
+          status?: string
+          wrong_question?: number | null
+        }
+        Update: {
+          answer_timer_starts_at?: string | null
+          cleared_questions?: number
+          coin_reward?: number
+          current_question?: number
+          deadline_at?: string | null
+          ended_at?: string | null
+          event_id?: string
+          fifty_fifty_used?: boolean
+          game_state?: string
+          guest_id?: string
+          hint_used?: boolean
+          id?: string
+          meta?: Json
+          presented_at?: string | null
+          result?: string | null
+          skip_used?: boolean
+          skipped_questions?: number
+          started_at?: string
+          status?: string
+          wrong_question?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_attempts_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_attempts_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crorepati_events: {
+        Row: {
+          active: boolean
+          answer_timer_seconds: number
+          code: string
+          config: Json
+          created_at: string
+          id: string
+          mode: string
+          pre_timer_seconds: number
+          question_count: number
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          answer_timer_seconds?: number
+          code: string
+          config?: Json
+          created_at?: string
+          id?: string
+          mode?: string
+          pre_timer_seconds?: number
+          question_count?: number
+          title?: string
+        }
+        Update: {
+          active?: boolean
+          answer_timer_seconds?: number
+          code?: string
+          config?: Json
+          created_at?: string
+          id?: string
+          mode?: string
+          pre_timer_seconds?: number
+          question_count?: number
+          title?: string
+        }
+        Relationships: []
+      }
+      crorepati_rewards: {
+        Row: {
+          coins: number
+          event_id: string
+          question_number: number
+        }
+        Insert: {
+          coins?: number
+          event_id: string
+          question_number: number
+        }
+        Update: {
+          coins?: number
+          event_id?: string
+          question_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_rewards_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crorepati_served_questions: {
+        Row: {
+          guest_id: string
+          last_served_at: string
+          question_hash: string
+        }
+        Insert: {
+          guest_id: string
+          last_served_at?: string
+          question_hash: string
+        }
+        Update: {
+          guest_id?: string
+          last_served_at?: string
+          question_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_served_questions_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       curriculum_boards: {
         Row: {
           aliases: Json
@@ -1479,6 +1732,44 @@ export type Database = {
             foreignKeyName: "settings_guest_id_fkey"
             columns: ["guest_id"]
             isOneToOne: true
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ustad_coin_ledger: {
+        Row: {
+          coins: number
+          created_at: string
+          guest_id: string
+          id: string
+          note: string
+          ref_id: string
+          source: string
+        }
+        Insert: {
+          coins?: number
+          created_at?: string
+          guest_id: string
+          id?: string
+          note?: string
+          ref_id: string
+          source: string
+        }
+        Update: {
+          coins?: number
+          created_at?: string
+          guest_id?: string
+          id?: string
+          note?: string
+          ref_id?: string
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_coin_ledger_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
             referencedRelation: "guests"
             referencedColumns: ["id"]
           },
