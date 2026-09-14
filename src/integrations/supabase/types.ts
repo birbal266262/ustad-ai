@@ -1244,6 +1244,30 @@ export type Database = {
         }
         Relationships: []
       }
+      device_ai_batches: {
+        Row: {
+          created_at: string
+          guest_id: string
+          id: string
+          raw: string
+          task: string
+        }
+        Insert: {
+          created_at?: string
+          guest_id: string
+          id?: string
+          raw: string
+          task: string
+        }
+        Update: {
+          created_at?: string
+          guest_id?: string
+          id?: string
+          raw?: string
+          task?: string
+        }
+        Relationships: []
+      }
       exam_batches: {
         Row: {
           board: string | null
@@ -2734,6 +2758,7 @@ export type Database = {
       }
       mega_passes: {
         Row: {
+          base_cost: number
           cost: number
           event_id: string
           guest_id: string
@@ -2744,6 +2769,7 @@ export type Database = {
           valid_until: string
         }
         Insert: {
+          base_cost?: number
           cost?: number
           event_id: string
           guest_id: string
@@ -2754,6 +2780,7 @@ export type Database = {
           valid_until: string
         }
         Update: {
+          base_cost?: number
           cost?: number
           event_id?: string
           guest_id?: string
@@ -3009,7 +3036,9 @@ export type Database = {
           board: string | null
           created_at: string
           education: string | null
+          equipped_badge: string | null
           equipped_frame: string | null
+          equipped_name_style: string | null
           guest_id: string
           interests: string | null
           klass: string | null
@@ -3026,7 +3055,9 @@ export type Database = {
           board?: string | null
           created_at?: string
           education?: string | null
+          equipped_badge?: string | null
           equipped_frame?: string | null
+          equipped_name_style?: string | null
           guest_id: string
           interests?: string | null
           klass?: string | null
@@ -3043,7 +3074,9 @@ export type Database = {
           board?: string | null
           created_at?: string
           education?: string | null
+          equipped_badge?: string | null
           equipped_frame?: string | null
+          equipped_name_style?: string | null
           guest_id?: string
           interests?: string | null
           klass?: string | null
@@ -3054,8 +3087,22 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "profiles_equipped_badge_fk"
+            columns: ["equipped_badge"]
+            isOneToOne: false
+            referencedRelation: "ustad_shop_items"
+            referencedColumns: ["item_id"]
+          },
+          {
             foreignKeyName: "profiles_equipped_frame_fk"
             columns: ["equipped_frame"]
+            isOneToOne: false
+            referencedRelation: "ustad_shop_items"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "profiles_equipped_name_style_fk"
+            columns: ["equipped_name_style"]
             isOneToOne: false
             referencedRelation: "ustad_shop_items"
             referencedColumns: ["item_id"]
@@ -3397,6 +3444,56 @@ export type Database = {
         }
         Relationships: []
       }
+      ustad_accounts: {
+        Row: {
+          created_at: string
+          failed_attempts: number
+          guest_id: string
+          last_login_at: string | null
+          locked_until: string | null
+          password_algo: string
+          password_hash: string
+          updated_at: string
+          user_id: string
+          username: string
+          username_normalized: string
+        }
+        Insert: {
+          created_at?: string
+          failed_attempts?: number
+          guest_id: string
+          last_login_at?: string | null
+          locked_until?: string | null
+          password_algo?: string
+          password_hash: string
+          updated_at?: string
+          user_id?: string
+          username: string
+          username_normalized: string
+        }
+        Update: {
+          created_at?: string
+          failed_attempts?: number
+          guest_id?: string
+          last_login_at?: string | null
+          locked_until?: string | null
+          password_algo?: string
+          password_hash?: string
+          updated_at?: string
+          user_id?: string
+          username?: string
+          username_normalized?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_accounts_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: true
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ustad_achievements: {
         Row: {
           awarded_at: string
@@ -3461,7 +3558,7 @@ export type Database = {
       }
       ustad_certificates: {
         Row: {
-          achievement_id: string
+          achievement_id: string | null
           certificate_id: string
           certificate_type: string
           claim_count: number
@@ -3474,6 +3571,7 @@ export type Database = {
           issued_at: string
           match_id: string | null
           metadata: Json
+          reference_key: string | null
           revoked_at: string | null
           revoked_reason: string
           template_code: string
@@ -3483,7 +3581,7 @@ export type Database = {
           verification_token: string
         }
         Insert: {
-          achievement_id: string
+          achievement_id?: string | null
           certificate_id: string
           certificate_type: string
           claim_count?: number
@@ -3496,6 +3594,7 @@ export type Database = {
           issued_at?: string
           match_id?: string | null
           metadata?: Json
+          reference_key?: string | null
           revoked_at?: string | null
           revoked_reason?: string
           template_code?: string
@@ -3505,7 +3604,7 @@ export type Database = {
           verification_token: string
         }
         Update: {
-          achievement_id?: string
+          achievement_id?: string | null
           certificate_id?: string
           certificate_type?: string
           claim_count?: number
@@ -3518,6 +3617,7 @@ export type Database = {
           issued_at?: string
           match_id?: string | null
           metadata?: Json
+          reference_key?: string | null
           revoked_at?: string | null
           revoked_reason?: string
           template_code?: string
@@ -3596,6 +3696,110 @@ export type Database = {
           },
         ]
       }
+      ustad_coin_offer_purchases: {
+        Row: {
+          base_price: number
+          created_at: string
+          discount_amount: number
+          discount_pct: number
+          final_price: number
+          guest_id: string
+          id: string
+          item_id: string
+          item_kind: string
+          ref_id: string
+          source: string
+          weekly_offer_id: string
+        }
+        Insert: {
+          base_price?: number
+          created_at?: string
+          discount_amount?: number
+          discount_pct?: number
+          final_price?: number
+          guest_id: string
+          id?: string
+          item_id?: string
+          item_kind?: string
+          ref_id?: string
+          source?: string
+          weekly_offer_id: string
+        }
+        Update: {
+          base_price?: number
+          created_at?: string
+          discount_amount?: number
+          discount_pct?: number
+          final_price?: number
+          guest_id?: string
+          id?: string
+          item_id?: string
+          item_kind?: string
+          ref_id?: string
+          source?: string
+          weekly_offer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_coin_offer_purchases_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ustad_coin_offers: {
+        Row: {
+          coins_deducted: number
+          created_at: string
+          cycle_end: string
+          cycle_start: string
+          discount_pct: number
+          duration_minutes: number
+          end_iso: string
+          id: string
+          offer_day_offset: number
+          purchases_count: number
+          start_iso: string
+          status: string
+          updated_at: string
+          weekly_offer_id: string
+        }
+        Insert: {
+          coins_deducted?: number
+          created_at?: string
+          cycle_end: string
+          cycle_start: string
+          discount_pct: number
+          duration_minutes: number
+          end_iso: string
+          id?: string
+          offer_day_offset?: number
+          purchases_count?: number
+          start_iso: string
+          status?: string
+          updated_at?: string
+          weekly_offer_id: string
+        }
+        Update: {
+          coins_deducted?: number
+          created_at?: string
+          cycle_end?: string
+          cycle_start?: string
+          discount_pct?: number
+          duration_minutes?: number
+          end_iso?: string
+          id?: string
+          offer_day_offset?: number
+          purchases_count?: number
+          start_iso?: string
+          status?: string
+          updated_at?: string
+          weekly_offer_id?: string
+        }
+        Relationships: []
+      }
       ustad_event_reminder_log: {
         Row: {
           event_id: string
@@ -3635,12 +3839,34 @@ export type Database = {
           },
         ]
       }
+      ustad_login_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          outcome: string
+          username_normalized: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          outcome?: string
+          username_normalized?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          outcome?: string
+          username_normalized?: string
+        }
+        Relationships: []
+      }
       ustad_notifications: {
         Row: {
           action_path: string
           category: string
           created_at: string
           dedupe_key: string
+          deleted_at: string | null
           guest_id: string
           id: string
           is_read: boolean
@@ -3659,6 +3885,7 @@ export type Database = {
           category?: string
           created_at?: string
           dedupe_key: string
+          deleted_at?: string | null
           guest_id: string
           id?: string
           is_read?: boolean
@@ -3677,6 +3904,7 @@ export type Database = {
           category?: string
           created_at?: string
           dedupe_key?: string
+          deleted_at?: string | null
           guest_id?: string
           id?: string
           is_read?: boolean
@@ -3748,6 +3976,119 @@ export type Database = {
             columns: ["transaction_id"]
             isOneToOne: false
             referencedRelation: "ustad_coin_ledger"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ustad_rank_awards: {
+        Row: {
+          category: string
+          certificate_id: string | null
+          coins: number
+          created_at: string
+          cup_awarded: boolean
+          cup_count: number
+          cycle_end: string
+          cycle_start: string
+          guest_id: string
+          id: string
+          profile_name: string
+          rank: number
+          status: string
+          transaction_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          certificate_id?: string | null
+          coins?: number
+          created_at?: string
+          cup_awarded?: boolean
+          cup_count?: number
+          cycle_end: string
+          cycle_start: string
+          guest_id: string
+          id?: string
+          profile_name?: string
+          rank: number
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          certificate_id?: string | null
+          coins?: number
+          created_at?: string
+          cup_awarded?: boolean
+          cup_count?: number
+          cycle_end?: string
+          cycle_start?: string
+          guest_id?: string
+          id?: string
+          profile_name?: string
+          rank?: number
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ustad_rank_cycles: {
+        Row: {
+          created_at: string
+          cycle_end: string
+          cycle_start: string
+          settled_at: string
+          summary: Json
+        }
+        Insert: {
+          created_at?: string
+          cycle_end: string
+          cycle_start: string
+          settled_at?: string
+          summary?: Json
+        }
+        Update: {
+          created_at?: string
+          cycle_end?: string
+          cycle_start?: string
+          settled_at?: string
+          summary?: Json
+        }
+        Relationships: []
+      }
+      ustad_sessions: {
+        Row: {
+          expires_at: string
+          guest_id: string
+          issued_at: string
+          jti: string
+          revoked_at: string | null
+          revoked_reason: string
+        }
+        Insert: {
+          expires_at: string
+          guest_id: string
+          issued_at?: string
+          jti: string
+          revoked_at?: string | null
+          revoked_reason?: string
+        }
+        Update: {
+          expires_at?: string
+          guest_id?: string
+          issued_at?: string
+          jti?: string
+          revoked_at?: string | null
+          revoked_reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_sessions_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
             referencedColumns: ["id"]
           },
         ]
@@ -3958,8 +4299,48 @@ export type Database = {
           transaction_id: string
         }[]
       }
+      ustad_create_guest_account: {
+        Args: {
+          p_guest_id: string
+          p_password_hash: string
+          p_username: string
+          p_username_normalized: string
+        }
+        Returns: {
+          guest_id: string
+          jti: string
+          user_id: string
+          username: string
+        }[]
+      }
+      ustad_issue_fresh_session: {
+        Args: { p_guest_id: string }
+        Returns: {
+          jti: string
+        }[]
+      }
+      ustad_refresh_session: {
+        Args: { p_guest_id: string; p_jti: string }
+        Returns: {
+          jti: string
+        }[]
+      }
+      ustad_revoke_session: {
+        Args: { p_jti: string; p_reason: string }
+        Returns: {
+          jti: string
+          revoked_at: string
+        }[]
+      }
       ustad_shop_buy: {
-        Args: { p_guest_id: string; p_item_id: string }
+        Args: {
+          p_discount_pct?: number
+          p_final_price?: number
+          p_guest_id: string
+          p_item_id: string
+          p_offer_base_price?: number
+          p_offer_weekly_id?: string
+        }
         Returns: {
           already_owned: boolean
           balance_after: number
