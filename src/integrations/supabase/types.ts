@@ -242,6 +242,7 @@ export type Database = {
           current_question: number
           deadline_at: string | null
           ended_at: string | null
+          entry_id: string | null
           event_id: string
           fifty_fifty_used: boolean
           game_state: string
@@ -264,6 +265,7 @@ export type Database = {
           current_question?: number
           deadline_at?: string | null
           ended_at?: string | null
+          entry_id?: string | null
           event_id: string
           fifty_fifty_used?: boolean
           game_state?: string
@@ -286,6 +288,7 @@ export type Database = {
           current_question?: number
           deadline_at?: string | null
           ended_at?: string | null
+          entry_id?: string | null
           event_id?: string
           fifty_fifty_used?: boolean
           game_state?: string
@@ -303,6 +306,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "crorepati_attempts_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_entries"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "crorepati_attempts_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
@@ -318,6 +328,178 @@ export type Database = {
           },
         ]
       }
+      crorepati_entries: {
+        Row: {
+          attempt_id: string | null
+          created_at: string
+          currency: string
+          entry_type: string
+          event_id: string
+          free_entry_used: boolean
+          guest_id: string
+          id: string
+          idempotency_key: string | null
+          ledger_ref: string | null
+          occurrence_id: string | null
+          paid_entry: boolean
+          price: number
+          status: string
+        }
+        Insert: {
+          attempt_id?: string | null
+          created_at?: string
+          currency?: string
+          entry_type: string
+          event_id: string
+          free_entry_used?: boolean
+          guest_id: string
+          id?: string
+          idempotency_key?: string | null
+          ledger_ref?: string | null
+          occurrence_id?: string | null
+          paid_entry?: boolean
+          price?: number
+          status?: string
+        }
+        Update: {
+          attempt_id?: string | null
+          created_at?: string
+          currency?: string
+          entry_type?: string
+          event_id?: string
+          free_entry_used?: boolean
+          guest_id?: string
+          id?: string
+          idempotency_key?: string | null
+          ledger_ref?: string | null
+          occurrence_id?: string | null
+          paid_entry?: boolean
+          price?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_entries_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: true
+            referencedRelation: "crorepati_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_entries_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_entries_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_entries_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_event_occurrences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crorepati_entry_state: {
+        Row: {
+          event_id: string
+          free_entries: number
+          free_entries_used: number
+          guest_id: string
+          last_played_at: string | null
+          last_recovered_at: string | null
+          missed_streak: number
+          paid_entries_used: number
+          recovery_count: number
+          updated_at: string
+          zero_notified: boolean
+        }
+        Insert: {
+          event_id: string
+          free_entries?: number
+          free_entries_used?: number
+          guest_id: string
+          last_played_at?: string | null
+          last_recovered_at?: string | null
+          missed_streak?: number
+          paid_entries_used?: number
+          recovery_count?: number
+          updated_at?: string
+          zero_notified?: boolean
+        }
+        Update: {
+          event_id?: string
+          free_entries?: number
+          free_entries_used?: number
+          guest_id?: string
+          last_played_at?: string | null
+          last_recovered_at?: string | null
+          missed_streak?: number
+          paid_entries_used?: number
+          recovery_count?: number
+          updated_at?: string
+          zero_notified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_entry_state_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_entry_state_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: true
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crorepati_event_occurrences: {
+        Row: {
+          closed_at: string
+          created_at: string
+          event_id: string
+          id: string
+          opened_at: string
+          status: string
+        }
+        Insert: {
+          closed_at: string
+          created_at?: string
+          event_id: string
+          id?: string
+          opened_at: string
+          status?: string
+        }
+        Update: {
+          closed_at?: string
+          created_at?: string
+          event_id?: string
+          id?: string
+          opened_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_event_occurrences_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crorepati_events: {
         Row: {
           active: boolean
@@ -325,11 +507,21 @@ export type Database = {
           code: string
           config: Json
           created_at: string
+          entry_timezone: string
+          free_entries_grant: number
           id: string
+          max_free_entries: number
+          missed_threshold: number
           mode: string
+          open_hour: number
+          open_minute: number
+          paid_entry_coin_cost: number
+          paid_entry_enabled: boolean
           pre_timer_seconds: number
           question_count: number
+          schedule_weekdays: Json
           title: string
+          window_minutes: number
         }
         Insert: {
           active?: boolean
@@ -337,11 +529,21 @@ export type Database = {
           code: string
           config?: Json
           created_at?: string
+          entry_timezone?: string
+          free_entries_grant?: number
           id?: string
+          max_free_entries?: number
+          missed_threshold?: number
           mode?: string
+          open_hour?: number
+          open_minute?: number
+          paid_entry_coin_cost?: number
+          paid_entry_enabled?: boolean
           pre_timer_seconds?: number
           question_count?: number
+          schedule_weekdays?: Json
           title?: string
+          window_minutes?: number
         }
         Update: {
           active?: boolean
@@ -349,13 +551,91 @@ export type Database = {
           code?: string
           config?: Json
           created_at?: string
+          entry_timezone?: string
+          free_entries_grant?: number
           id?: string
+          max_free_entries?: number
+          missed_threshold?: number
           mode?: string
+          open_hour?: number
+          open_minute?: number
+          paid_entry_coin_cost?: number
+          paid_entry_enabled?: boolean
           pre_timer_seconds?: number
           question_count?: number
+          schedule_weekdays?: Json
           title?: string
+          window_minutes?: number
         }
         Relationships: []
+      }
+      crorepati_participation: {
+        Row: {
+          attempt_id: string | null
+          closed_at: string
+          counted: boolean
+          created_at: string
+          eligible: boolean
+          event_id: string
+          guest_id: string
+          occurrence_id: string
+          opened_at: string
+          played: boolean
+        }
+        Insert: {
+          attempt_id?: string | null
+          closed_at: string
+          counted?: boolean
+          created_at?: string
+          eligible?: boolean
+          event_id: string
+          guest_id: string
+          occurrence_id: string
+          opened_at: string
+          played?: boolean
+        }
+        Update: {
+          attempt_id?: string | null
+          closed_at?: string
+          counted?: boolean
+          created_at?: string
+          eligible?: boolean
+          event_id?: string
+          guest_id?: string
+          occurrence_id?: string
+          opened_at?: string
+          played?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crorepati_participation_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_participation_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_participation_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crorepati_participation_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "crorepati_event_occurrences"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       crorepati_rewards: {
         Row: {
