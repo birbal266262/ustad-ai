@@ -3198,6 +3198,166 @@ export type Database = {
           },
         ]
       }
+      tournament_attempts: {
+        Row: {
+          achievement_id: string | null
+          attempt_date: string
+          certificate_id: string
+          certificate_url: string
+          coins_awarded: number
+          completed_at: string | null
+          correct_count: number
+          created_at: string
+          current_index: number
+          cycle_end: string | null
+          cycle_id: string
+          cycle_start: string | null
+          entry_amount: number
+          entry_txn_id: string
+          guest_id: string
+          id: string
+          kind: string
+          language: string
+          result: string
+          reward_issued: boolean
+          reward_txn_id: string
+          score: number
+          status: string
+          ticket_consumed: boolean
+          total_questions: number
+          updated_at: string
+          wrong_count: number
+        }
+        Insert: {
+          achievement_id?: string | null
+          attempt_date: string
+          certificate_id?: string
+          certificate_url?: string
+          coins_awarded?: number
+          completed_at?: string | null
+          correct_count?: number
+          created_at?: string
+          current_index?: number
+          cycle_end?: string | null
+          cycle_id: string
+          cycle_start?: string | null
+          entry_amount?: number
+          entry_txn_id?: string
+          guest_id: string
+          id?: string
+          kind: string
+          language?: string
+          result?: string
+          reward_issued?: boolean
+          reward_txn_id?: string
+          score?: number
+          status?: string
+          ticket_consumed?: boolean
+          total_questions?: number
+          updated_at?: string
+          wrong_count?: number
+        }
+        Update: {
+          achievement_id?: string | null
+          attempt_date?: string
+          certificate_id?: string
+          certificate_url?: string
+          coins_awarded?: number
+          completed_at?: string | null
+          correct_count?: number
+          created_at?: string
+          current_index?: number
+          cycle_end?: string | null
+          cycle_id?: string
+          cycle_start?: string | null
+          entry_amount?: number
+          entry_txn_id?: string
+          guest_id?: string
+          id?: string
+          kind?: string
+          language?: string
+          result?: string
+          reward_issued?: boolean
+          reward_txn_id?: string
+          score?: number
+          status?: string
+          ticket_consumed?: boolean
+          total_questions?: number
+          updated_at?: string
+          wrong_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_attempts_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tournament_questions: {
+        Row: {
+          answered_at: string | null
+          attempt_id: string
+          category: string
+          correct_index: number
+          created_at: string
+          difficulty: string
+          explanation: string
+          id: string
+          is_correct: boolean | null
+          options: Json
+          payload: Json
+          position: number
+          prompt: string
+          selected_index: number | null
+          solution: string
+        }
+        Insert: {
+          answered_at?: string | null
+          attempt_id: string
+          category?: string
+          correct_index?: number
+          created_at?: string
+          difficulty?: string
+          explanation?: string
+          id?: string
+          is_correct?: boolean | null
+          options?: Json
+          payload?: Json
+          position: number
+          prompt?: string
+          selected_index?: number | null
+          solution?: string
+        }
+        Update: {
+          answered_at?: string | null
+          attempt_id?: string
+          category?: string
+          correct_index?: number
+          created_at?: string
+          difficulty?: string
+          explanation?: string
+          id?: string
+          is_correct?: boolean | null
+          options?: Json
+          payload?: Json
+          position?: number
+          prompt?: string
+          selected_index?: number | null
+          solution?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_questions_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "tournament_attempts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trophy_designs: {
         Row: {
           active: boolean
@@ -3637,6 +3797,38 @@ export type Database = {
         }
         Relationships: []
       }
+      ustad_tickets: {
+        Row: {
+          created_at: string
+          god_tickets: number
+          guest_id: string
+          lifetime_purchased: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          god_tickets?: number
+          guest_id: string
+          lifetime_purchased?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          god_tickets?: number
+          guest_id?: string
+          lifetime_purchased?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_tickets_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: true
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ustad_trophies: {
         Row: {
           achievement_id: string
@@ -3775,6 +3967,11 @@ export type Database = {
           purchase_id: string
           transaction_id: string
         }[]
+      }
+      ustad_ticket_consume: { Args: { p_guest_id: string }; Returns: number }
+      ustad_ticket_grant: {
+        Args: { p_amount: number; p_guest_id: string }
+        Returns: number
       }
     }
     Enums: {
