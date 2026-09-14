@@ -156,6 +156,432 @@ export type Database = {
           },
         ]
       }
+      curriculum_boards: {
+        Row: {
+          aliases: Json
+          board_id: string
+          created_at: string
+          name: string
+          session_start_month: number
+        }
+        Insert: {
+          aliases?: Json
+          board_id: string
+          created_at?: string
+          name: string
+          session_start_month: number
+        }
+        Update: {
+          aliases?: Json
+          board_id?: string
+          created_at?: string
+          name?: string
+          session_start_month?: number
+        }
+        Relationships: []
+      }
+      curriculum_books: {
+        Row: {
+          academic_session: string
+          board_id: string
+          book_id: string
+          book_name: string
+          book_part: string | null
+          created_at: string
+          edition: string | null
+          klass: number
+          last_verified_at: string | null
+          record_status: string
+          source_reference: string | null
+          subject_id: string
+          verification_status: string
+        }
+        Insert: {
+          academic_session: string
+          board_id: string
+          book_id: string
+          book_name: string
+          book_part?: string | null
+          created_at?: string
+          edition?: string | null
+          klass: number
+          last_verified_at?: string | null
+          record_status?: string
+          source_reference?: string | null
+          subject_id: string
+          verification_status?: string
+        }
+        Update: {
+          academic_session?: string
+          board_id?: string
+          book_id?: string
+          book_name?: string
+          book_part?: string | null
+          created_at?: string
+          edition?: string | null
+          klass?: number
+          last_verified_at?: string | null
+          record_status?: string
+          source_reference?: string | null
+          subject_id?: string
+          verification_status?: string
+        }
+        Relationships: []
+      }
+      curriculum_chapters: {
+        Row: {
+          book_id: string
+          chapter_id: string
+          chapter_name: string
+          chapter_number: number
+          chapter_order: number
+          created_at: string
+          last_verified_at: string | null
+          source_reference: string | null
+          verification_status: string
+        }
+        Insert: {
+          book_id: string
+          chapter_id: string
+          chapter_name: string
+          chapter_number: number
+          chapter_order: number
+          created_at?: string
+          last_verified_at?: string | null
+          source_reference?: string | null
+          verification_status?: string
+        }
+        Update: {
+          book_id?: string
+          chapter_id?: string
+          chapter_name?: string
+          chapter_number?: number
+          chapter_order?: number
+          created_at?: string
+          last_verified_at?: string | null
+          source_reference?: string | null
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_chapters_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_books"
+            referencedColumns: ["book_id"]
+          },
+        ]
+      }
+      curriculum_chapters_detail: {
+        Row: {
+          book_id: string
+          chapter_id: string
+          chapter_name: string
+          chapter_number: number
+          concepts_count: number
+          created_at: string
+          examples_count: number
+          extracted_at: string
+          formulas_count: number
+          questions_count: number
+          record_status: string
+          section_order: number[]
+          source_reference: string | null
+          summary: string | null
+          topics_count: number
+          verification_status: string
+          version: string
+        }
+        Insert: {
+          book_id: string
+          chapter_id: string
+          chapter_name: string
+          chapter_number: number
+          concepts_count?: number
+          created_at?: string
+          examples_count?: number
+          extracted_at?: string
+          formulas_count?: number
+          questions_count?: number
+          record_status?: string
+          section_order?: number[]
+          source_reference?: string | null
+          summary?: string | null
+          topics_count?: number
+          verification_status?: string
+          version?: string
+        }
+        Update: {
+          book_id?: string
+          chapter_id?: string
+          chapter_name?: string
+          chapter_number?: number
+          concepts_count?: number
+          created_at?: string
+          examples_count?: number
+          extracted_at?: string
+          formulas_count?: number
+          questions_count?: number
+          record_status?: string
+          section_order?: number[]
+          source_reference?: string | null
+          summary?: string | null
+          topics_count?: number
+          verification_status?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      curriculum_concepts: {
+        Row: {
+          book_id: string
+          chapter_id: string
+          concept_id: string
+          created_at: string
+          kind: string
+          math_raw: string | null
+          source_location: string | null
+          text: string
+          topic_id: string | null
+          variables: string[] | null
+        }
+        Insert: {
+          book_id: string
+          chapter_id: string
+          concept_id: string
+          created_at?: string
+          kind?: string
+          math_raw?: string | null
+          source_location?: string | null
+          text: string
+          topic_id?: string | null
+          variables?: string[] | null
+        }
+        Update: {
+          book_id?: string
+          chapter_id?: string
+          concept_id?: string
+          created_at?: string
+          kind?: string
+          math_raw?: string | null
+          source_location?: string | null
+          text?: string
+          topic_id?: string | null
+          variables?: string[] | null
+        }
+        Relationships: []
+      }
+      curriculum_questions: {
+        Row: {
+          answer_reference: string | null
+          book_id: string
+          chapter_id: string
+          created_at: string
+          diagram_required: boolean
+          question_id: string
+          question_type: string
+          related_concept: string | null
+          related_formula: string | null
+          section_id: string | null
+          source_location: string | null
+          text: string
+        }
+        Insert: {
+          answer_reference?: string | null
+          book_id: string
+          chapter_id: string
+          created_at?: string
+          diagram_required?: boolean
+          question_id: string
+          question_type?: string
+          related_concept?: string | null
+          related_formula?: string | null
+          section_id?: string | null
+          source_location?: string | null
+          text: string
+        }
+        Update: {
+          answer_reference?: string | null
+          book_id?: string
+          chapter_id?: string
+          created_at?: string
+          diagram_required?: boolean
+          question_id?: string
+          question_type?: string
+          related_concept?: string | null
+          related_formula?: string | null
+          section_id?: string | null
+          source_location?: string | null
+          text?: string
+        }
+        Relationships: []
+      }
+      curriculum_sections: {
+        Row: {
+          book_id: string
+          chapter_id: string
+          created_at: string
+          order: number
+          section_id: string
+          title: string
+        }
+        Insert: {
+          book_id: string
+          chapter_id: string
+          created_at?: string
+          order?: number
+          section_id: string
+          title: string
+        }
+        Update: {
+          book_id?: string
+          chapter_id?: string
+          created_at?: string
+          order?: number
+          section_id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      curriculum_sessions: {
+        Row: {
+          board_id: string
+          created_at: string
+          end_year: number
+          label: string
+          session_id: string
+          start_year: number
+        }
+        Insert: {
+          board_id: string
+          created_at?: string
+          end_year: number
+          label: string
+          session_id: string
+          start_year: number
+        }
+        Update: {
+          board_id?: string
+          created_at?: string
+          end_year?: number
+          label?: string
+          session_id?: string
+          start_year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_sessions_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_boards"
+            referencedColumns: ["board_id"]
+          },
+        ]
+      }
+      curriculum_subjects: {
+        Row: {
+          board_id: string
+          created_at: string
+          klass: number
+          name: string
+          subject_id: string
+        }
+        Insert: {
+          board_id: string
+          created_at?: string
+          klass: number
+          name: string
+          subject_id: string
+        }
+        Update: {
+          board_id?: string
+          created_at?: string
+          klass?: number
+          name?: string
+          subject_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_subjects_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_boards"
+            referencedColumns: ["board_id"]
+          },
+        ]
+      }
+      curriculum_topics: {
+        Row: {
+          book_id: string
+          chapter_id: string
+          content: string | null
+          created_at: string
+          order: number
+          section_id: string | null
+          title: string
+          topic_id: string
+        }
+        Insert: {
+          book_id: string
+          chapter_id: string
+          content?: string | null
+          created_at?: string
+          order?: number
+          section_id?: string | null
+          title: string
+          topic_id: string
+        }
+        Update: {
+          book_id?: string
+          chapter_id?: string
+          content?: string | null
+          created_at?: string
+          order?: number
+          section_id?: string | null
+          title?: string
+          topic_id?: string
+        }
+        Relationships: []
+      }
+      curriculum_verifications: {
+        Row: {
+          academic_session: string
+          board_id: string
+          book_id: string
+          id: number
+          klass: number
+          record_status: string
+          source_reference: string | null
+          subject_id: string
+          verification_status: string
+          verified_at: string
+        }
+        Insert: {
+          academic_session: string
+          board_id: string
+          book_id: string
+          id?: never
+          klass: number
+          record_status: string
+          source_reference?: string | null
+          subject_id: string
+          verification_status: string
+          verified_at?: string
+        }
+        Update: {
+          academic_session?: string
+          board_id?: string
+          book_id?: string
+          id?: never
+          klass?: number
+          record_status?: string
+          source_reference?: string | null
+          subject_id?: string
+          verification_status?: string
+          verified_at?: string
+        }
+        Relationships: []
+      }
       exam_batches: {
         Row: {
           board: string | null
