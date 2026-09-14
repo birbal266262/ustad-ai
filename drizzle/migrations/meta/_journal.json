@@ -1,0 +1,97 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1788503138841,
+      "tag": "0000_ustad_core_baseline",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788503175603,
+      "tag": "0001_ustad_curriculum_and_book_knowledge",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788503208951,
+      "tag": "0002_gallery_20260902071134",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788503244264,
+      "tag": "0003_crorepati_part1_20260902120000",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788503291003,
+      "tag": "0004_mega_tournament_part2_20260902130000",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788570815193,
+      "tag": "0005_crorepati_entry_part3",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788570857492,
+      "tag": "0006_trophy_achievements_part4",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788570895524,
+      "tag": "0007_certificates_part5",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788570944383,
+      "tag": "0008_master_event_engine_part6",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788659198547,
+      "tag": "0009_coin_economy_shop_part7",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788659218893,
+      "tag": "0010_profile_avatar_part8",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1788659257263,
+      "tag": "0011_notification_center_part9",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1788659278523,
+      "tag": "0012_event_language_snapshot_part7hotfix",
+      "breakpoints": true
+    }
+  ]
+}

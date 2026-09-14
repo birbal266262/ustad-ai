@@ -10,33 +10,312 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClassroomRouteImport } from './routes/classroom'
+import { Route as CrorepatiRouteImport } from './routes/crorepati'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as GodTournamentRouteImport } from './routes/god-tournament'
+import { Route as MegaRouteImport } from './routes/mega'
+import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as NotesRouteImport } from './routes/notes'
+import { Route as RemindersRouteImport } from './routes/reminders'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ShopRouteImport } from './routes/shop'
+import { Route as StudyRouteImport } from './routes/study'
+import { Route as TournamentRouteImport } from './routes/tournament'
+import { Route as ExamsIndexRouteImport } from './routes/exams.index'
+import { Route as ExamsExamIdRouteImport } from './routes/exams.$examId'
+import { Route as NotificationsIdRouteImport } from './routes/notifications.$id'
+import { Route as ApiPublicEventAutopilotRouteImport } from './routes/api/public/event-autopilot'
+import { Route as ApiPublicExamSchedulerRouteImport } from './routes/api/public/exam-scheduler'
+import { Route as ApiPublicNotificationAnnounceRouteImport } from './routes/api/public/notification-announce'
+import { Route as ApiPublicNotificationSchedulerRouteImport } from './routes/api/public/notification-scheduler'
+import { Route as GalleryShareTokenRouteImport } from './routes/gallery.share.$token'
+import { Route as VerifyCertificateVtokenRouteImport } from './routes/verify.certificate.$vtoken'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClassroomRoute = ClassroomRouteImport.update({
+  id: '/classroom',
+  path: '/classroom',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrorepatiRoute = CrorepatiRouteImport.update({
+  id: '/crorepati',
+  path: '/crorepati',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GodTournamentRoute = GodTournamentRouteImport.update({
+  id: '/god-tournament',
+  path: '/god-tournament',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MegaRoute = MegaRouteImport.update({
+  id: '/mega',
+  path: '/mega',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemoryRoute = MemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotesRoute = NotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RemindersRoute = RemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudyRoute = StudyRouteImport.update({
+  id: '/study',
+  path: '/study',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TournamentRoute = TournamentRouteImport.update({
+  id: '/tournament',
+  path: '/tournament',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamsIndexRoute = ExamsIndexRouteImport.update({
+  id: '/exams/',
+  path: '/exams/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamsExamIdRoute = ExamsExamIdRouteImport.update({
+  id: '/exams/$examId',
+  path: '/exams/$examId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsIdRoute = NotificationsIdRouteImport.update({
+  id: '/notifications/$id',
+  path: '/notifications/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicEventAutopilotRoute = ApiPublicEventAutopilotRouteImport.update({
+  id: '/api/public/event-autopilot',
+  path: '/api/public/event-autopilot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicExamSchedulerRoute = ApiPublicExamSchedulerRouteImport.update({
+  id: '/api/public/exam-scheduler',
+  path: '/api/public/exam-scheduler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicNotificationAnnounceRoute =
+  ApiPublicNotificationAnnounceRouteImport.update({
+    id: '/api/public/notification-announce',
+    path: '/api/public/notification-announce',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicNotificationSchedulerRoute =
+  ApiPublicNotificationSchedulerRouteImport.update({
+    id: '/api/public/notification-scheduler',
+    path: '/api/public/notification-scheduler',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const GalleryShareTokenRoute = GalleryShareTokenRouteImport.update({
+  id: '/gallery/share/$token',
+  path: '/gallery/share/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyCertificateVtokenRoute = VerifyCertificateVtokenRouteImport.update({
+  id: '/verify/certificate/$vtoken',
+  path: '/verify/certificate/$vtoken',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/classroom': typeof ClassroomRoute
+  '/crorepati': typeof CrorepatiRoute
+  '/events': typeof EventsRoute
+  '/god-tournament': typeof GodTournamentRoute
+  '/mega': typeof MegaRoute
+  '/memory': typeof MemoryRoute
+  '/notes': typeof NotesRoute
+  '/reminders': typeof RemindersRoute
+  '/settings': typeof SettingsRoute
+  '/shop': typeof ShopRoute
+  '/study': typeof StudyRoute
+  '/tournament': typeof TournamentRoute
+  '/exams/$examId': typeof ExamsExamIdRoute
+  '/notifications/$id': typeof NotificationsIdRoute
+  '/exams/': typeof ExamsIndexRoute
+  '/api/public/event-autopilot': typeof ApiPublicEventAutopilotRoute
+  '/api/public/exam-scheduler': typeof ApiPublicExamSchedulerRoute
+  '/api/public/notification-announce': typeof ApiPublicNotificationAnnounceRoute
+  '/api/public/notification-scheduler': typeof ApiPublicNotificationSchedulerRoute
+  '/gallery/share/$token': typeof GalleryShareTokenRoute
+  '/verify/certificate/$vtoken': typeof VerifyCertificateVtokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/classroom': typeof ClassroomRoute
+  '/crorepati': typeof CrorepatiRoute
+  '/events': typeof EventsRoute
+  '/god-tournament': typeof GodTournamentRoute
+  '/mega': typeof MegaRoute
+  '/memory': typeof MemoryRoute
+  '/notes': typeof NotesRoute
+  '/reminders': typeof RemindersRoute
+  '/settings': typeof SettingsRoute
+  '/shop': typeof ShopRoute
+  '/study': typeof StudyRoute
+  '/tournament': typeof TournamentRoute
+  '/exams/$examId': typeof ExamsExamIdRoute
+  '/notifications/$id': typeof NotificationsIdRoute
+  '/exams': typeof ExamsIndexRoute
+  '/api/public/event-autopilot': typeof ApiPublicEventAutopilotRoute
+  '/api/public/exam-scheduler': typeof ApiPublicExamSchedulerRoute
+  '/api/public/notification-announce': typeof ApiPublicNotificationAnnounceRoute
+  '/api/public/notification-scheduler': typeof ApiPublicNotificationSchedulerRoute
+  '/gallery/share/$token': typeof GalleryShareTokenRoute
+  '/verify/certificate/$vtoken': typeof VerifyCertificateVtokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/classroom': typeof ClassroomRoute
+  '/crorepati': typeof CrorepatiRoute
+  '/events': typeof EventsRoute
+  '/god-tournament': typeof GodTournamentRoute
+  '/mega': typeof MegaRoute
+  '/memory': typeof MemoryRoute
+  '/notes': typeof NotesRoute
+  '/reminders': typeof RemindersRoute
+  '/settings': typeof SettingsRoute
+  '/shop': typeof ShopRoute
+  '/study': typeof StudyRoute
+  '/tournament': typeof TournamentRoute
+  '/exams/$examId': typeof ExamsExamIdRoute
+  '/notifications/$id': typeof NotificationsIdRoute
+  '/exams/': typeof ExamsIndexRoute
+  '/api/public/event-autopilot': typeof ApiPublicEventAutopilotRoute
+  '/api/public/exam-scheduler': typeof ApiPublicExamSchedulerRoute
+  '/api/public/notification-announce': typeof ApiPublicNotificationAnnounceRoute
+  '/api/public/notification-scheduler': typeof ApiPublicNotificationSchedulerRoute
+  '/gallery/share/$token': typeof GalleryShareTokenRoute
+  '/verify/certificate/$vtoken': typeof VerifyCertificateVtokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/classroom'
+    | '/crorepati'
+    | '/events'
+    | '/god-tournament'
+    | '/mega'
+    | '/memory'
+    | '/notes'
+    | '/reminders'
+    | '/settings'
+    | '/shop'
+    | '/study'
+    | '/tournament'
+    | '/exams/$examId'
+    | '/notifications/$id'
+    | '/exams/'
+    | '/api/public/event-autopilot'
+    | '/api/public/exam-scheduler'
+    | '/api/public/notification-announce'
+    | '/api/public/notification-scheduler'
+    | '/gallery/share/$token'
+    | '/verify/certificate/$vtoken'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/classroom'
+    | '/crorepati'
+    | '/events'
+    | '/god-tournament'
+    | '/mega'
+    | '/memory'
+    | '/notes'
+    | '/reminders'
+    | '/settings'
+    | '/shop'
+    | '/study'
+    | '/tournament'
+    | '/exams/$examId'
+    | '/notifications/$id'
+    | '/exams'
+    | '/api/public/event-autopilot'
+    | '/api/public/exam-scheduler'
+    | '/api/public/notification-announce'
+    | '/api/public/notification-scheduler'
+    | '/gallery/share/$token'
+    | '/verify/certificate/$vtoken'
+  id:
+    | '__root__'
+    | '/'
+    | '/classroom'
+    | '/crorepati'
+    | '/events'
+    | '/god-tournament'
+    | '/mega'
+    | '/memory'
+    | '/notes'
+    | '/reminders'
+    | '/settings'
+    | '/shop'
+    | '/study'
+    | '/tournament'
+    | '/exams/$examId'
+    | '/notifications/$id'
+    | '/exams/'
+    | '/api/public/event-autopilot'
+    | '/api/public/exam-scheduler'
+    | '/api/public/notification-announce'
+    | '/api/public/notification-scheduler'
+    | '/gallery/share/$token'
+    | '/verify/certificate/$vtoken'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClassroomRoute: typeof ClassroomRoute
+  CrorepatiRoute: typeof CrorepatiRoute
+  EventsRoute: typeof EventsRoute
+  GodTournamentRoute: typeof GodTournamentRoute
+  MegaRoute: typeof MegaRoute
+  MemoryRoute: typeof MemoryRoute
+  NotesRoute: typeof NotesRoute
+  RemindersRoute: typeof RemindersRoute
+  SettingsRoute: typeof SettingsRoute
+  ShopRoute: typeof ShopRoute
+  StudyRoute: typeof StudyRoute
+  TournamentRoute: typeof TournamentRoute
+  ExamsExamIdRoute: typeof ExamsExamIdRoute
+  NotificationsIdRoute: typeof NotificationsIdRoute
+  ExamsIndexRoute: typeof ExamsIndexRoute
+  ApiPublicEventAutopilotRoute: typeof ApiPublicEventAutopilotRoute
+  ApiPublicExamSchedulerRoute: typeof ApiPublicExamSchedulerRoute
+  ApiPublicNotificationAnnounceRoute: typeof ApiPublicNotificationAnnounceRoute
+  ApiPublicNotificationSchedulerRoute: typeof ApiPublicNotificationSchedulerRoute
+  GalleryShareTokenRoute: typeof GalleryShareTokenRoute
+  VerifyCertificateVtokenRoute: typeof VerifyCertificateVtokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +327,179 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/classroom': {
+      id: '/classroom'
+      path: '/classroom'
+      fullPath: '/classroom'
+      preLoaderRoute: typeof ClassroomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crorepati': {
+      id: '/crorepati'
+      path: '/crorepati'
+      fullPath: '/crorepati'
+      preLoaderRoute: typeof CrorepatiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/god-tournament': {
+      id: '/god-tournament'
+      path: '/god-tournament'
+      fullPath: '/god-tournament'
+      preLoaderRoute: typeof GodTournamentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mega': {
+      id: '/mega'
+      path: '/mega'
+      fullPath: '/mega'
+      preLoaderRoute: typeof MegaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memory': {
+      id: '/memory'
+      path: '/memory'
+      fullPath: '/memory'
+      preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notes': {
+      id: '/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof NotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reminders': {
+      id: '/reminders'
+      path: '/reminders'
+      fullPath: '/reminders'
+      preLoaderRoute: typeof RemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/study': {
+      id: '/study'
+      path: '/study'
+      fullPath: '/study'
+      preLoaderRoute: typeof StudyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tournament': {
+      id: '/tournament'
+      path: '/tournament'
+      fullPath: '/tournament'
+      preLoaderRoute: typeof TournamentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exams/': {
+      id: '/exams/'
+      path: '/exams'
+      fullPath: '/exams/'
+      preLoaderRoute: typeof ExamsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exams/$examId': {
+      id: '/exams/$examId'
+      path: '/exams/$examId'
+      fullPath: '/exams/$examId'
+      preLoaderRoute: typeof ExamsExamIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications/$id': {
+      id: '/notifications/$id'
+      path: '/notifications/$id'
+      fullPath: '/notifications/$id'
+      preLoaderRoute: typeof NotificationsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/event-autopilot': {
+      id: '/api/public/event-autopilot'
+      path: '/api/public/event-autopilot'
+      fullPath: '/api/public/event-autopilot'
+      preLoaderRoute: typeof ApiPublicEventAutopilotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/exam-scheduler': {
+      id: '/api/public/exam-scheduler'
+      path: '/api/public/exam-scheduler'
+      fullPath: '/api/public/exam-scheduler'
+      preLoaderRoute: typeof ApiPublicExamSchedulerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/notification-announce': {
+      id: '/api/public/notification-announce'
+      path: '/api/public/notification-announce'
+      fullPath: '/api/public/notification-announce'
+      preLoaderRoute: typeof ApiPublicNotificationAnnounceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/notification-scheduler': {
+      id: '/api/public/notification-scheduler'
+      path: '/api/public/notification-scheduler'
+      fullPath: '/api/public/notification-scheduler'
+      preLoaderRoute: typeof ApiPublicNotificationSchedulerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery/share/$token': {
+      id: '/gallery/share/$token'
+      path: '/gallery/share/$token'
+      fullPath: '/gallery/share/$token'
+      preLoaderRoute: typeof GalleryShareTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify/certificate/$vtoken': {
+      id: '/verify/certificate/$vtoken'
+      path: '/verify/certificate/$vtoken'
+      fullPath: '/verify/certificate/$vtoken'
+      preLoaderRoute: typeof VerifyCertificateVtokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClassroomRoute: ClassroomRoute,
+  CrorepatiRoute: CrorepatiRoute,
+  EventsRoute: EventsRoute,
+  GodTournamentRoute: GodTournamentRoute,
+  MegaRoute: MegaRoute,
+  MemoryRoute: MemoryRoute,
+  NotesRoute: NotesRoute,
+  RemindersRoute: RemindersRoute,
+  SettingsRoute: SettingsRoute,
+  ShopRoute: ShopRoute,
+  StudyRoute: StudyRoute,
+  TournamentRoute: TournamentRoute,
+  ExamsExamIdRoute: ExamsExamIdRoute,
+  NotificationsIdRoute: NotificationsIdRoute,
+  ExamsIndexRoute: ExamsIndexRoute,
+  ApiPublicEventAutopilotRoute: ApiPublicEventAutopilotRoute,
+  ApiPublicExamSchedulerRoute: ApiPublicExamSchedulerRoute,
+  ApiPublicNotificationAnnounceRoute: ApiPublicNotificationAnnounceRoute,
+  ApiPublicNotificationSchedulerRoute: ApiPublicNotificationSchedulerRoute,
+  GalleryShareTokenRoute: GalleryShareTokenRoute,
+  VerifyCertificateVtokenRoute: VerifyCertificateVtokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
