@@ -2734,6 +2734,7 @@ export type Database = {
       }
       mega_passes: {
         Row: {
+          base_cost: number
           cost: number
           event_id: string
           guest_id: string
@@ -2744,6 +2745,7 @@ export type Database = {
           valid_until: string
         }
         Insert: {
+          base_cost?: number
           cost?: number
           event_id: string
           guest_id: string
@@ -2754,6 +2756,7 @@ export type Database = {
           valid_until: string
         }
         Update: {
+          base_cost?: number
           cost?: number
           event_id?: string
           guest_id?: string
@@ -3615,6 +3618,110 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ustad_coin_offer_purchases: {
+        Row: {
+          base_price: number
+          created_at: string
+          discount_amount: number
+          discount_pct: number
+          final_price: number
+          guest_id: string
+          id: string
+          item_id: string
+          item_kind: string
+          ref_id: string
+          source: string
+          weekly_offer_id: string
+        }
+        Insert: {
+          base_price?: number
+          created_at?: string
+          discount_amount?: number
+          discount_pct?: number
+          final_price?: number
+          guest_id: string
+          id?: string
+          item_id?: string
+          item_kind?: string
+          ref_id?: string
+          source?: string
+          weekly_offer_id: string
+        }
+        Update: {
+          base_price?: number
+          created_at?: string
+          discount_amount?: number
+          discount_pct?: number
+          final_price?: number
+          guest_id?: string
+          id?: string
+          item_id?: string
+          item_kind?: string
+          ref_id?: string
+          source?: string
+          weekly_offer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_coin_offer_purchases_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ustad_coin_offers: {
+        Row: {
+          coins_deducted: number
+          created_at: string
+          cycle_end: string
+          cycle_start: string
+          discount_pct: number
+          duration_minutes: number
+          end_iso: string
+          id: string
+          offer_day_offset: number
+          purchases_count: number
+          start_iso: string
+          status: string
+          updated_at: string
+          weekly_offer_id: string
+        }
+        Insert: {
+          coins_deducted?: number
+          created_at?: string
+          cycle_end: string
+          cycle_start: string
+          discount_pct: number
+          duration_minutes: number
+          end_iso: string
+          id?: string
+          offer_day_offset?: number
+          purchases_count?: number
+          start_iso: string
+          status?: string
+          updated_at?: string
+          weekly_offer_id: string
+        }
+        Update: {
+          coins_deducted?: number
+          created_at?: string
+          cycle_end?: string
+          cycle_start?: string
+          discount_pct?: number
+          duration_minutes?: number
+          end_iso?: string
+          id?: string
+          offer_day_offset?: number
+          purchases_count?: number
+          start_iso?: string
+          status?: string
+          updated_at?: string
+          weekly_offer_id?: string
+        }
+        Relationships: []
       }
       ustad_event_reminder_log: {
         Row: {
