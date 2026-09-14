@@ -3461,7 +3461,7 @@ export type Database = {
       }
       ustad_certificates: {
         Row: {
-          achievement_id: string
+          achievement_id: string | null
           certificate_id: string
           certificate_type: string
           claim_count: number
@@ -3483,7 +3483,7 @@ export type Database = {
           verification_token: string
         }
         Insert: {
-          achievement_id: string
+          achievement_id?: string | null
           certificate_id: string
           certificate_type: string
           claim_count?: number
@@ -3505,7 +3505,7 @@ export type Database = {
           verification_token: string
         }
         Update: {
-          achievement_id?: string
+          achievement_id?: string | null
           certificate_id?: string
           certificate_type?: string
           claim_count?: number
@@ -3751,6 +3751,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ustad_rank_awards: {
+        Row: {
+          category: string
+          certificate_id: string | null
+          coins: number
+          created_at: string
+          cup_awarded: boolean
+          cup_count: number
+          cycle_end: string
+          cycle_start: string
+          guest_id: string
+          id: string
+          profile_name: string
+          rank: number
+          transaction_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          certificate_id?: string | null
+          coins?: number
+          created_at?: string
+          cup_awarded?: boolean
+          cup_count?: number
+          cycle_end: string
+          cycle_start: string
+          guest_id: string
+          id?: string
+          profile_name?: string
+          rank: number
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          certificate_id?: string | null
+          coins?: number
+          created_at?: string
+          cup_awarded?: boolean
+          cup_count?: number
+          cycle_end?: string
+          cycle_start?: string
+          guest_id?: string
+          id?: string
+          profile_name?: string
+          rank?: number
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ustad_rank_cycles: {
+        Row: {
+          created_at: string
+          cycle_end: string
+          cycle_start: string
+          settled_at: string
+          summary: Json
+        }
+        Insert: {
+          created_at?: string
+          cycle_end: string
+          cycle_start: string
+          settled_at?: string
+          summary?: Json
+        }
+        Update: {
+          created_at?: string
+          cycle_end?: string
+          cycle_start?: string
+          settled_at?: string
+          summary?: Json
+        }
+        Relationships: []
       }
       ustad_shop_items: {
         Row: {
