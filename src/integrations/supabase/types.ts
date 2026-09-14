@@ -1440,6 +1440,617 @@ export type Database = {
           },
         ]
       }
+      mega_events: {
+        Row: {
+          category: string
+          code: string
+          created_at: string
+          difficulty: string
+          ends_at: string
+          id: string
+          max_players: number
+          min_players: number
+          multiplayer_enabled: boolean
+          pass_cost: number
+          pre_timer_seconds: number
+          question_count: number
+          question_seconds: number
+          rewards: Json
+          rules: Json
+          scoring: Json
+          solo_enabled: boolean
+          solo_question_count: number
+          solo_required_correct: number
+          solo_total_seconds: number
+          starts_at: string
+          status: string
+          timezone: string
+          title: string
+        }
+        Insert: {
+          category?: string
+          code: string
+          created_at?: string
+          difficulty?: string
+          ends_at?: string
+          id?: string
+          max_players?: number
+          min_players?: number
+          multiplayer_enabled?: boolean
+          pass_cost?: number
+          pre_timer_seconds?: number
+          question_count?: number
+          question_seconds?: number
+          rewards?: Json
+          rules?: Json
+          scoring?: Json
+          solo_enabled?: boolean
+          solo_question_count?: number
+          solo_required_correct?: number
+          solo_total_seconds?: number
+          starts_at?: string
+          status?: string
+          timezone?: string
+          title?: string
+        }
+        Update: {
+          category?: string
+          code?: string
+          created_at?: string
+          difficulty?: string
+          ends_at?: string
+          id?: string
+          max_players?: number
+          min_players?: number
+          multiplayer_enabled?: boolean
+          pass_cost?: number
+          pre_timer_seconds?: number
+          question_count?: number
+          question_seconds?: number
+          rewards?: Json
+          rules?: Json
+          scoring?: Json
+          solo_enabled?: boolean
+          solo_question_count?: number
+          solo_required_correct?: number
+          solo_total_seconds?: number
+          starts_at?: string
+          status?: string
+          timezone?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      mega_lobby_presence: {
+        Row: {
+          display_name: string
+          event_id: string
+          guest_id: string
+          last_seen_at: string
+          match_id: string | null
+          state: string
+        }
+        Insert: {
+          display_name?: string
+          event_id: string
+          guest_id: string
+          last_seen_at?: string
+          match_id?: string | null
+          state?: string
+        }
+        Update: {
+          display_name?: string
+          event_id?: string
+          guest_id?: string
+          last_seen_at?: string
+          match_id?: string | null
+          state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_lobby_presence_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "mega_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_lobby_presence_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: true
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_match_answers: {
+        Row: {
+          answered_at: string
+          guest_id: string
+          hint_shown: boolean
+          is_correct: boolean
+          match_id: string
+          option_index: number | null
+          question_number: number
+          removed_options: Json | null
+          response_ms: number
+          score_delta: number
+          skipped: boolean
+        }
+        Insert: {
+          answered_at?: string
+          guest_id: string
+          hint_shown?: boolean
+          is_correct?: boolean
+          match_id: string
+          option_index?: number | null
+          question_number: number
+          removed_options?: Json | null
+          response_ms?: number
+          score_delta?: number
+          skipped?: boolean
+        }
+        Update: {
+          answered_at?: string
+          guest_id?: string
+          hint_shown?: boolean
+          is_correct?: boolean
+          match_id?: string
+          option_index?: number | null
+          question_number?: number
+          removed_options?: Json | null
+          response_ms?: number
+          score_delta?: number
+          skipped?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_match_answers_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_match_answers_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "mega_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_match_players: {
+        Row: {
+          correct_count: number
+          display_name: string
+          fifty_fifty_used: boolean
+          guest_id: string
+          hint_used: boolean
+          is_host: boolean
+          joined_at: string
+          last_seen_at: string
+          match_id: string
+          rank: number | null
+          score: number
+          skip_used: boolean
+          state: string
+          total_response_ms: number
+          unanswered_count: number
+          wrong_count: number
+        }
+        Insert: {
+          correct_count?: number
+          display_name?: string
+          fifty_fifty_used?: boolean
+          guest_id: string
+          hint_used?: boolean
+          is_host?: boolean
+          joined_at?: string
+          last_seen_at?: string
+          match_id: string
+          rank?: number | null
+          score?: number
+          skip_used?: boolean
+          state?: string
+          total_response_ms?: number
+          unanswered_count?: number
+          wrong_count?: number
+        }
+        Update: {
+          correct_count?: number
+          display_name?: string
+          fifty_fifty_used?: boolean
+          guest_id?: string
+          hint_used?: boolean
+          is_host?: boolean
+          joined_at?: string
+          last_seen_at?: string
+          match_id?: string
+          rank?: number | null
+          score?: number
+          skip_used?: boolean
+          state?: string
+          total_response_ms?: number
+          unanswered_count?: number
+          wrong_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_match_players_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_match_players_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "mega_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_match_questions: {
+        Row: {
+          category: string
+          correct_index: number
+          difficulty: string
+          event_id: string
+          explanation: string
+          hint: string
+          id: string
+          match_id: string
+          options: Json
+          question: string
+          question_number: number
+          resolved: boolean
+        }
+        Insert: {
+          category?: string
+          correct_index: number
+          difficulty?: string
+          event_id: string
+          explanation?: string
+          hint?: string
+          id?: string
+          match_id: string
+          options: Json
+          question: string
+          question_number: number
+          resolved?: boolean
+        }
+        Update: {
+          category?: string
+          correct_index?: number
+          difficulty?: string
+          event_id?: string
+          explanation?: string
+          hint?: string
+          id?: string
+          match_id?: string
+          options?: Json
+          question?: string
+          question_number?: number
+          resolved?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_match_questions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "mega_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_match_questions_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "mega_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_match_results: {
+        Row: {
+          created_at: string
+          duration_ms: number
+          ended_at: string | null
+          event_id: string
+          id: string
+          match_id: string
+          mode: string
+          outcome: string
+          question_count: number
+          standings: Json
+          started_at: string | null
+          tie_break_reason: string
+          winner_guest_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number
+          ended_at?: string | null
+          event_id: string
+          id?: string
+          match_id: string
+          mode: string
+          outcome?: string
+          question_count: number
+          standings?: Json
+          started_at?: string | null
+          tie_break_reason?: string
+          winner_guest_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number
+          ended_at?: string | null
+          event_id?: string
+          id?: string
+          match_id?: string
+          mode?: string
+          outcome?: string
+          question_count?: number
+          standings?: Json
+          started_at?: string | null
+          tie_break_reason?: string
+          winner_guest_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_match_results_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "mega_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_match_results_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: true
+            referencedRelation: "mega_matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_match_results_winner_guest_id_fkey"
+            columns: ["winner_guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_matches: {
+        Row: {
+          answer_timer_starts_at: string | null
+          created_at: string
+          current_question: number
+          ended_at: string | null
+          event_id: string
+          host_guest_id: string
+          id: string
+          mode: string
+          presented_at: string | null
+          question_count: number
+          question_deadline_at: string | null
+          question_seconds: number
+          solo_deadline_at: string | null
+          started_at: string | null
+          status: string
+          tie_break_reason: string
+          winner_guest_id: string | null
+        }
+        Insert: {
+          answer_timer_starts_at?: string | null
+          created_at?: string
+          current_question?: number
+          ended_at?: string | null
+          event_id: string
+          host_guest_id: string
+          id?: string
+          mode?: string
+          presented_at?: string | null
+          question_count: number
+          question_deadline_at?: string | null
+          question_seconds?: number
+          solo_deadline_at?: string | null
+          started_at?: string | null
+          status?: string
+          tie_break_reason?: string
+          winner_guest_id?: string | null
+        }
+        Update: {
+          answer_timer_starts_at?: string | null
+          created_at?: string
+          current_question?: number
+          ended_at?: string | null
+          event_id?: string
+          host_guest_id?: string
+          id?: string
+          mode?: string
+          presented_at?: string | null
+          question_count?: number
+          question_deadline_at?: string | null
+          question_seconds?: number
+          solo_deadline_at?: string | null
+          started_at?: string | null
+          status?: string
+          tie_break_reason?: string
+          winner_guest_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_matches_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "mega_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_matches_host_guest_id_fkey"
+            columns: ["host_guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_matches_winner_guest_id_fkey"
+            columns: ["winner_guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_passes: {
+        Row: {
+          cost: number
+          event_id: string
+          guest_id: string
+          id: string
+          purchased_at: string
+          status: string
+          valid_from: string
+          valid_until: string
+        }
+        Insert: {
+          cost?: number
+          event_id: string
+          guest_id: string
+          id?: string
+          purchased_at?: string
+          status?: string
+          valid_from?: string
+          valid_until: string
+        }
+        Update: {
+          cost?: number
+          event_id?: string
+          guest_id?: string
+          id?: string
+          purchased_at?: string
+          status?: string
+          valid_from?: string
+          valid_until?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_passes_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "mega_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_passes_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_player_results: {
+        Row: {
+          coins_awarded: number
+          correct_count: number
+          created_at: string
+          event_id: string
+          guest_id: string
+          is_winner: boolean
+          match_id: string
+          mode: string
+          outcome: string
+          rank: number
+          score: number
+          total_response_ms: number
+          unanswered_count: number
+          wrong_count: number
+        }
+        Insert: {
+          coins_awarded?: number
+          correct_count?: number
+          created_at?: string
+          event_id: string
+          guest_id: string
+          is_winner?: boolean
+          match_id: string
+          mode: string
+          outcome?: string
+          rank?: number
+          score?: number
+          total_response_ms?: number
+          unanswered_count?: number
+          wrong_count?: number
+        }
+        Update: {
+          coins_awarded?: number
+          correct_count?: number
+          created_at?: string
+          event_id?: string
+          guest_id?: string
+          is_winner?: boolean
+          match_id?: string
+          mode?: string
+          outcome?: string
+          rank?: number
+          score?: number
+          total_response_ms?: number
+          unanswered_count?: number
+          wrong_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_player_results_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "mega_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_player_results_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mega_player_results_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "mega_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mega_served_questions: {
+        Row: {
+          guest_id: string
+          last_served_at: string
+          question_hash: string
+        }
+        Insert: {
+          guest_id: string
+          last_served_at?: string
+          question_hash: string
+        }
+        Update: {
+          guest_id?: string
+          last_served_at?: string
+          question_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mega_served_questions_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       memories: {
         Row: {
           content: string
