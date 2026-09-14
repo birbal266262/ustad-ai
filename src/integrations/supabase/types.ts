@@ -3430,6 +3430,110 @@ export type Database = {
           },
         ]
       }
+      ustad_event_reminder_log: {
+        Row: {
+          event_id: string
+          fired_at: string
+          guest_id: string
+          id: string
+          reminder_kind: string
+        }
+        Insert: {
+          event_id: string
+          fired_at?: string
+          guest_id: string
+          id?: string
+          reminder_kind: string
+        }
+        Update: {
+          event_id?: string
+          fired_at?: string
+          guest_id?: string
+          id?: string
+          reminder_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_event_reminder_log_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "master_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ustad_event_reminder_log_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ustad_notifications: {
+        Row: {
+          action_path: string
+          category: string
+          created_at: string
+          dedupe_key: string
+          guest_id: string
+          id: string
+          is_read: boolean
+          language: string
+          message: string
+          metadata: Json
+          read_at: string | null
+          reference_id: string
+          reference_type: string
+          title: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          action_path?: string
+          category?: string
+          created_at?: string
+          dedupe_key: string
+          guest_id: string
+          id?: string
+          is_read?: boolean
+          language?: string
+          message?: string
+          metadata?: Json
+          read_at?: string | null
+          reference_id?: string
+          reference_type?: string
+          title: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          action_path?: string
+          category?: string
+          created_at?: string
+          dedupe_key?: string
+          guest_id?: string
+          id?: string
+          is_read?: boolean
+          language?: string
+          message?: string
+          metadata?: Json
+          read_at?: string | null
+          reference_id?: string
+          reference_type?: string
+          title?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_notifications_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ustad_purchases: {
         Row: {
           guest_id: string
