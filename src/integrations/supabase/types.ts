@@ -2997,8 +2997,13 @@ export type Database = {
       profiles: {
         Row: {
           age: number | null
+          avatar_mime: string | null
+          avatar_ref: string | null
+          avatar_updated_at: string | null
           board: string | null
+          created_at: string
           education: string | null
+          equipped_frame: string | null
           guest_id: string
           interests: string | null
           klass: string | null
@@ -3009,8 +3014,13 @@ export type Database = {
         }
         Insert: {
           age?: number | null
+          avatar_mime?: string | null
+          avatar_ref?: string | null
+          avatar_updated_at?: string | null
           board?: string | null
+          created_at?: string
           education?: string | null
+          equipped_frame?: string | null
           guest_id: string
           interests?: string | null
           klass?: string | null
@@ -3021,8 +3031,13 @@ export type Database = {
         }
         Update: {
           age?: number | null
+          avatar_mime?: string | null
+          avatar_ref?: string | null
+          avatar_updated_at?: string | null
           board?: string | null
+          created_at?: string
           education?: string | null
+          equipped_frame?: string | null
           guest_id?: string
           interests?: string | null
           klass?: string | null
@@ -3032,6 +3047,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_equipped_frame_fk"
+            columns: ["equipped_frame"]
+            isOneToOne: false
+            referencedRelation: "ustad_shop_items"
+            referencedColumns: ["item_id"]
+          },
           {
             foreignKeyName: "profiles_guest_id_fkey"
             columns: ["guest_id"]
