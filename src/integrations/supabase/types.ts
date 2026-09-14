@@ -3768,6 +3768,7 @@ export type Database = {
           category: string
           created_at: string
           dedupe_key: string
+          deleted_at: string | null
           guest_id: string
           id: string
           is_read: boolean
@@ -3786,6 +3787,7 @@ export type Database = {
           category?: string
           created_at?: string
           dedupe_key: string
+          deleted_at?: string | null
           guest_id: string
           id?: string
           is_read?: boolean
@@ -3804,6 +3806,7 @@ export type Database = {
           category?: string
           created_at?: string
           dedupe_key?: string
+          deleted_at?: string | null
           guest_id?: string
           id?: string
           is_read?: boolean
@@ -4161,7 +4164,14 @@ export type Database = {
         }[]
       }
       ustad_shop_buy: {
-        Args: { p_guest_id: string; p_item_id: string }
+        Args: {
+          p_discount_pct?: number
+          p_final_price?: number
+          p_guest_id: string
+          p_item_id: string
+          p_offer_base_price?: number
+          p_offer_weekly_id?: string
+        }
         Returns: {
           already_owned: boolean
           balance_after: number
