@@ -175,6 +175,78 @@ export type Database = {
           },
         ]
       }
+      certificate_audit: {
+        Row: {
+          action: string
+          certificate_id: string
+          created_at: string
+          detail: Json
+          engine_version: string
+          guest_id: string | null
+          id: string
+          reason: string
+        }
+        Insert: {
+          action: string
+          certificate_id: string
+          created_at?: string
+          detail?: Json
+          engine_version?: string
+          guest_id?: string | null
+          id?: string
+          reason?: string
+        }
+        Update: {
+          action?: string
+          certificate_id?: string
+          created_at?: string
+          detail?: Json
+          engine_version?: string
+          guest_id?: string | null
+          id?: string
+          reason?: string
+        }
+        Relationships: []
+      }
+      certificate_templates: {
+        Row: {
+          active: boolean
+          certificate_type: string
+          code: string
+          created_at: string
+          event_id: string | null
+          id: string
+          subtitle: string
+          theme: Json
+          title: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          certificate_type: string
+          code: string
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          subtitle?: string
+          theme?: Json
+          title: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          certificate_type?: string
+          code?: string
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          subtitle?: string
+          theme?: Json
+          title?: string
+          version?: number
+        }
+        Relationships: []
+      }
       conversations: {
         Row: {
           created_at: string
@@ -2776,6 +2848,90 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "ustad_achievements_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: false
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ustad_certificates: {
+        Row: {
+          achievement_id: string
+          certificate_id: string
+          certificate_type: string
+          claim_count: number
+          claimed_at: string | null
+          created_at: string
+          event_id: string | null
+          guest_id: string
+          id: string
+          integrity_hash: string
+          issued_at: string
+          match_id: string | null
+          metadata: Json
+          revoked_at: string | null
+          revoked_reason: string
+          template_code: string
+          template_version: number
+          updated_at: string
+          verification_status: string
+          verification_token: string
+        }
+        Insert: {
+          achievement_id: string
+          certificate_id: string
+          certificate_type: string
+          claim_count?: number
+          claimed_at?: string | null
+          created_at?: string
+          event_id?: string | null
+          guest_id: string
+          id?: string
+          integrity_hash?: string
+          issued_at?: string
+          match_id?: string | null
+          metadata?: Json
+          revoked_at?: string | null
+          revoked_reason?: string
+          template_code?: string
+          template_version?: number
+          updated_at?: string
+          verification_status?: string
+          verification_token: string
+        }
+        Update: {
+          achievement_id?: string
+          certificate_id?: string
+          certificate_type?: string
+          claim_count?: number
+          claimed_at?: string | null
+          created_at?: string
+          event_id?: string | null
+          guest_id?: string
+          id?: string
+          integrity_hash?: string
+          issued_at?: string
+          match_id?: string | null
+          metadata?: Json
+          revoked_at?: string | null
+          revoked_reason?: string
+          template_code?: string
+          template_version?: number
+          updated_at?: string
+          verification_status?: string
+          verification_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ustad_certificates_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "ustad_achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ustad_certificates_guest_id_fkey"
             columns: ["guest_id"]
             isOneToOne: false
             referencedRelation: "guests"
