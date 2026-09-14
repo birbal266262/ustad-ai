@@ -375,6 +375,7 @@ export type Database = {
           guest_id: string
           hint_used: boolean
           id: string
+          language: string | null
           meta: Json
           presented_at: string | null
           result: string | null
@@ -398,6 +399,7 @@ export type Database = {
           guest_id: string
           hint_used?: boolean
           id?: string
+          language?: string | null
           meta?: Json
           presented_at?: string | null
           result?: string | null
@@ -421,6 +423,7 @@ export type Database = {
           guest_id?: string
           hint_used?: boolean
           id?: string
+          language?: string | null
           meta?: Json
           presented_at?: string | null
           result?: string | null
@@ -1914,6 +1917,7 @@ export type Database = {
           guest_id: string
           id: string
           idempotency_key: string | null
+          language: string | null
           lifelines_used: Json
           question_count: number
           result: string
@@ -1937,6 +1941,7 @@ export type Database = {
           guest_id: string
           id?: string
           idempotency_key?: string | null
+          language?: string | null
           lifelines_used?: Json
           question_count: number
           result?: string
@@ -1960,6 +1965,7 @@ export type Database = {
           guest_id?: string
           id?: string
           idempotency_key?: string | null
+          language?: string | null
           lifelines_used?: Json
           question_count?: number
           result?: string
