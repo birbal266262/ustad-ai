@@ -4,6 +4,8 @@
  * fallback chain and retries.
  */
 import { chatWithProvider, webSearch, readUrl, type ChatMessage } from "./provider-clients.server";
+import { openWebRead, openWebSearch } from "./open-web-search.server";
+
 import { getProvider } from "./providers";
 import { firstModelWith, providerCanSatisfy } from "./model-capabilities";
 import { parseCurriculumRequest } from "./curriculum/request";
