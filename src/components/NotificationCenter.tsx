@@ -201,21 +201,26 @@ export function NotificationCenter() {
     };
   }, [bnEnabled, ready, deliverPending]);
 
+  const note = (text: string | undefined, ok: boolean) => {
+    setBnNote(text ?? null);
+    setBnNoteOk(ok);
+  };
+
   const toggleBrowserNotifications = async () => {
     if (!guestId) return;
-    setBnNote(null);
+    note(undefined, false);
     if (bnEnabled) {
       setBrowserNotifyEnabled(guestId, false);
       setBnEnabled(false);
       return;
     }
     if (!browserNotifySupported()) {
-      setBnNote(bnText["unsupported"] ?? null);
+      note(bnText["unsupported"], false);
       return;
     }
     const status = await requestBrowserPermission();
     if (status !== "ok") {
-      setBnNote((status === "denied" ? bnText["denied"] : bnText["topLevel"]) ?? null);
+      note(status === "denied" ? bnText["denied"] : bnText["topLevel"], false);
       return;
     }
     // Enabling must not dump the whole existing backlog into the OS: mark what
@@ -234,6 +239,29 @@ export function NotificationCenter() {
     setBrowserNotifyEnabled(guestId, true);
     setBnEnabled(true);
   };
+
+  /**
+   * REAL end-to-end check: asks the browser to show one system notification now
+   * and reports exactly what the browser did — a refusal is never shown as
+   * success.
+   */
+  const testBrowserNotification = async () => {
+    setBnTesting(true);
+    note(undefined, false);
+    try {
+      const result = await sendTestNotification();
+      if (result.ok) {
+        note(bnText["testOk"], true);
+        return;
+      }
+      if (result.reason === "unsupported") note(bnText["unsupported"], false);
+      else if (result.reason === "not-granted") note(bnText["denied"], false);
+      else note(`${bnText["testFail"]}${result.error ? ` (${result.error})` : ""}`, false);
+    } finally {
+      setBnTesting(false);
+    }
+  };
+
 
   /* ---------------- feed ---------------- */
 
