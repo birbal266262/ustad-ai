@@ -40,8 +40,10 @@ import {
   getBrowserNotifyEnabled,
   requestBrowserPermission,
   seedDelivered,
+  sendTestNotification,
   setBrowserNotifyEnabled,
   showBrowserNotification,
+
   type BnLanguage,
 } from "@/lib/browser-notify";
 
