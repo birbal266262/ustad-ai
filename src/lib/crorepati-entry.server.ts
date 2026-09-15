@@ -47,13 +47,22 @@ async function getEventRow(): Promise<Row> {
     .eq("code", CROREPATI_EVENT_CODE)
     .maybeSingle();
   if (data) return data;
+  // Concurrent first-time callers race here: the loser's INSERT hits the unique
+  // "code" constraint. Upsert on the code, and if the row was created by the
+  // other request in between, just read it back instead of failing.
   const { data: created, error } = await client
     .from("crorepati_events")
-    .insert({ code: CROREPATI_EVENT_CODE, title: "Kon Banega Crorepati" })
+    .upsert({ code: CROREPATI_EVENT_CODE, title: "Kon Banega Crorepati" }, { onConflict: "code" })
     .select()
-    .single();
-  if (error) throw new Error(error.message);
-  return created;
+    .maybeSingle();
+  if (created) return created;
+  const { data: existing } = await client
+    .from("crorepati_events")
+    .select("*")
+    .eq("code", CROREPATI_EVENT_CODE)
+    .maybeSingle();
+  if (existing) return existing;
+  throw new Error(error?.message ?? "Could not load the Crorepati event.");
 }
 
 function configOf(event: Row): EntryConfig {
