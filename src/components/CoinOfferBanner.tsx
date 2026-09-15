@@ -61,6 +61,18 @@ function istDay(iso?: string): string {
 export function CoinOfferBanner({ token }: { token: string }) {
   const [state, setState] = useState<BannerState | null>(null);
   const [checked, setChecked] = useState(false);
+  /**
+   * A cheap local clock (one tick every 15s, no network) so the banner
+   * disappears the moment the window closes, instead of lingering until the
+   * next server read. No aggressive polling and no per-second rerender.
+   */
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 15000);
+    return () => window.clearInterval(id);
+  }, []);
+
 
   useEffect(() => {
     if (!token) return;
