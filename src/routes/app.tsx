@@ -50,13 +50,13 @@ import { hasDeviceAi, runDeviceText } from "@/lib/browser-ai";
 export const Route = createFileRoute("/app")({
   head: () => ({
     meta: [
-      { title: "USTAD AI — Guest AI Tutor, Chat, Exams & Notes" },
+      { title: "USTAD AI App — Chat, Exams & Notes" },
       {
         name: "description",
         content:
           "USTAD AI is a login-free AI tutor: multi-provider chat, web search, voice, exam generator, smart notes and memory. Developer by Yusuf Ali.",
       },
-      { property: "og:title", content: "USTAD AI — Guest AI Tutor" },
+      { property: "og:title", content: "USTAD AI App — Guest AI Tutor" },
       {
         property: "og:description",
         content: "Login-free AI tutor with multi-provider routing, exams, notes, memory and voice.",
