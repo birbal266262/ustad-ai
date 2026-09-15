@@ -2,36 +2,62 @@
 import { requireGuest } from "./guest.server";
 import { usableProviders } from "./api-manager.server";
 import { ttsSynthesize, sttTranscribe } from "./provider-clients.server";
-import { normalizeForSpeech } from "./speech-normalize";
+import {
+  SPEECH_INSTRUCTIONS,
+  SPEECH_VOICE,
+  cleanForSpeech,
+  toClassroomLanguage,
+} from "./classroom-speech";
 
 /**
- * TTS priority (Section 15/16 of the classroom spec): ElevenLabs first, then
- * Deepgram, then OpenAI. Each configured provider is TRIED in order; if one
- * fails, the next is attempted. Only when every configured provider fails do we
- * throw — the client then falls back to browser speech. This is the graceful
- * provider-failure chain, never a lesson restart.
+ * API Manager TTS priority: ElevenLabs first, then Deepgram, then OpenAI. Each
+ * configured provider is TRIED in order; only when every configured provider
+ * fails do we throw.
  */
 export const VOICE_TTS_ORDER = ["elevenlabs", "deepgram", "openai"] as const;
 
-/** Fallback TTS via the built-in Lovable AI gateway (no user API key needed). */
-async function gatewaySynthesize(text: string): Promise<{ audioBase64: string; mime: string }> {
+/**
+ * Classroom TTS stages (spec §5/§19). The classroom asks for ONE stage at a
+ * time so the client can run the exact failover order
+ * Lovable TTS → Browser TTS → API Manager TTS.
+ *  - "lovable":     built-in Lovable AI voice only (first priority).
+ *  - "api_manager": the user's OWN configured providers only (last resort).
+ *  - "auto":        legacy behaviour (configured providers, then Lovable).
+ */
+export type TtsStage = "lovable" | "api_manager" | "auto";
+
+/** Thrown message the client recognises as "nothing is configured here". */
+const NO_API_MANAGER_TTS = "No voice provider is configured in API Manager.";
+
+/** TTS via the built-in Lovable AI gateway (no user API key needed). */
+async function gatewaySynthesize(
+  text: string,
+  language: "english" | "hindi" | "hinglish",
+): Promise<{ audioBase64: string; mime: string }> {
   const apiKey = process.env["LOVABLE_API_KEY"];
-  if (!apiKey) throw new Error("No voice provider is connected. Browser voice is still available.");
+  if (!apiKey) throw new Error("Lovable voice is not configured (no API key).");
   const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/speech", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
     body: JSON.stringify({
       model: "openai/gpt-4o-mini-tts",
       input: text,
-      voice: "alloy",
+      voice: SPEECH_VOICE[language],
+      // Language authority: delivery is steered by the CLASSROOM language, so a
+      // Hindi lesson is spoken as Hindi and never with English pronunciation.
+      instructions: SPEECH_INSTRUCTIONS[language],
       response_format: "mp3",
     }),
   });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(`Voice synthesis failed [${res.status}]: ${body}`);
+    throw new Error(`Lovable voice failed [${res.status}]: ${body.slice(0, 300)}`);
   }
   const bytes = new Uint8Array(await res.arrayBuffer());
+  // HTTP 200 is NOT success (§6): empty or absurdly short audio is a failure.
+  if (bytes.byteLength < 1024) {
+    throw new Error(`Lovable voice returned unusable audio (${bytes.byteLength} bytes).`);
+  }
   let binary = "";
   for (let i = 0; i < bytes.length; i += 0x8000) {
     binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
@@ -43,39 +69,62 @@ export async function synthesize(input: {
   token: unknown;
   text: string;
   provider?: string | undefined;
-  /** classroom teaching language ("english" | "hindi" | "hinglish") — forwarded to providers that support it */
+  /** classroom teaching language ("english" | "hindi" | "hinglish") */
   language?: string | undefined;
+  /** which failover stage to run (default: legacy "auto") */
+  stage?: string | undefined;
 }) {
   const guestId = await requireGuest(input.token);
+  const language = toClassroomLanguage(input.language);
+  const stage: TtsStage =
+    input.stage === "lovable" || input.stage === "api_manager" ? input.stage : "auto";
+  // Speech-only text, cleaned in the SELECTED classroom language (§8/§11).
+  const text = cleanForSpeech(input.text, language).slice(0, 4000);
+  if (!text) throw new Error("Nothing to speak after cleaning the text.");
+
+  if (stage === "lovable") {
+    const audio = await gatewaySynthesize(text, language);
+    return { ...audio, provider: "lovable", language };
+  }
+
   const available = await usableProviders(guestId);
   const requested = input.provider ? [input.provider] : [...VOICE_TTS_ORDER];
   const order = [...new Set([...requested, ...VOICE_TTS_ORDER])].filter((p) => p !== "browser");
   const usable = order.map((p) => available.find((a) => a.provider === p)).filter(Boolean);
-  const text = normalizeForSpeech(input.text).slice(0, 4000);
+
   if (!usable.length) {
-    const audio = await gatewaySynthesize(text);
-    return { ...audio, provider: "lovable", language: input.language ?? "english" };
+    // The user's own API Manager has no TTS provider. Never fake audio (§6/TEST 6).
+    if (stage === "api_manager") throw new Error(NO_API_MANAGER_TTS);
+    const audio = await gatewaySynthesize(text, language);
+    return { ...audio, provider: "lovable", language };
   }
+
   const errors: string[] = [];
   // Try each configured provider in priority order; the first success wins.
-  // A single broken/expired provider can never silence the classroom (Bug 21).
   for (const chosen of usable) {
     try {
       const audio = await ttsSynthesize(chosen!.provider, chosen!.config, text);
-      return { ...audio, provider: chosen!.provider, language: input.language ?? "english" };
+      if (!audio.audioBase64 || audio.audioBase64.length < 512) {
+        throw new Error("returned empty audio");
+      }
+      return { ...audio, provider: chosen!.provider, language };
     } catch (e) {
       errors.push(`${chosen!.provider}: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
+  if (stage === "api_manager") {
+    throw new Error(`All API Manager voice providers failed (${errors.join("; ")}).`);
+  }
   try {
-    const audio = await gatewaySynthesize(text);
-    return { ...audio, provider: "lovable", language: input.language ?? "english" };
+    const audio = await gatewaySynthesize(text, language);
+    return { ...audio, provider: "lovable", language };
   } catch {
     throw new Error(
       `All voice providers failed (${errors.join("; ")}). Browser voice is still available.`,
     );
   }
 }
+
 
 /** Fallback STT via the built-in Lovable AI gateway (no user API key needed). */
 async function gatewayTranscribe(base64: string, mime: string): Promise<string> {
