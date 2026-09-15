@@ -77,62 +77,65 @@ function cleanUrl(href: string): string | null {
 }
 
 /* ------------------------------------------------------------------ */
-/* Source 1 — DuckDuckGo HTML (no key, no tracking cookie)             */
-/* ------------------------------------------------------------------ */
-
-async function duckDuckGo(query: string, limit: number): Promise<OpenWebResult[]> {
-  const res = await get("https://html.duckduckgo.com/html/", {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ q: query, kl: "in-en" }).toString(),
-  });
-  if (!res.ok) throw new Error(`DuckDuckGo returned ${res.status}`);
-  const html = await res.text();
-
-  const out: OpenWebResult[] = [];
-  const blocks = html.split(/class="result(?:s_links|__body)/g).slice(1);
-  for (const block of blocks) {
-    const link = block.match(/class="result__a"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/);
-    if (!link) continue;
-    const url = cleanUrl(link[1] ?? "");
-    if (!url) continue;
-    const title = stripTags(link[2] ?? "");
-    const snip = block.match(/class="result__snippet"[^>]*>([\s\S]*?)<\/a>/);
-    if (!title) continue;
-    if (out.some((r) => r.url === url)) continue;
-    out.push({ title, url, snippet: stripTags(snip?.[1] ?? "").slice(0, 500) });
-    if (out.length >= limit) break;
-  }
-  if (!out.length) throw new Error("DuckDuckGo returned no parsable results");
-  return out;
-}
-
-/* ------------------------------------------------------------------ */
-/* Source 2 — DuckDuckGo Lite (different markup, same engine)          */
+/* Source 1 — DuckDuckGo Lite (real live results, no key)              */
 /* ------------------------------------------------------------------ */
 
 async function duckDuckGoLite(query: string, limit: number): Promise<OpenWebResult[]> {
-  const res = await get("https://lite.duckduckgo.com/lite/", {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ q: query }).toString(),
-  });
+  const res = await get(`https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(query)}`);
   if (!res.ok) throw new Error(`DuckDuckGo Lite returned ${res.status}`);
   const html = await res.text();
+  if (/anomaly|automated queries/i.test(html) && !/result-link/.test(html))
+    throw new Error("DuckDuckGo Lite blocked this request (rate limit).");
 
   const out: OpenWebResult[] = [];
-  const anchor = /<a[^>]+class="result-link"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g;
+  // The markup uses single quotes for class names, so both quote styles are
+  // accepted; the snippet lives in the NEXT `result-snippet` cell.
+  const anchor = /<a[^>]+href=["']([^"']+)["'][^>]*class=['"]result-link['"][^>]*>([\s\S]*?)<\/a>/g;
   let m: RegExpExecArray | null;
   while ((m = anchor.exec(html))) {
     const url = cleanUrl(m[1] ?? "");
     const title = stripTags(m[2] ?? "");
     if (!url || !title || out.some((r) => r.url === url)) continue;
-    out.push({ title, url, snippet: "" });
+    const after = html.slice(anchor.lastIndex, anchor.lastIndex + 4000);
+    const snip = after.match(/class=['"]result-snippet['"][^>]*>([\s\S]*?)<\/td>/);
+    out.push({ title, url, snippet: stripTags(snip?.[1] ?? "").slice(0, 500) });
     if (out.length >= limit) break;
   }
   if (!out.length) throw new Error("DuckDuckGo Lite returned no parsable results");
   return out;
 }
+
+/* ------------------------------------------------------------------ */
+/* Source 2 — DuckDuckGo HTML endpoint (same engine, other markup)     */
+/* ------------------------------------------------------------------ */
+
+async function duckDuckGoHtml(query: string, limit: number): Promise<OpenWebResult[]> {
+  const res = await get(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error(`DuckDuckGo returned ${res.status}`);
+  const html = await res.text();
+  if (/anomaly|automated queries/i.test(html) && !/result__a/.test(html))
+    throw new Error("DuckDuckGo blocked this request (rate limit).");
+
+  const out: OpenWebResult[] = [];
+  const anchor = /<a[^>]+class=['"][^'"]*result__a[^'"]*['"][^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/g;
+  const anchorAlt = /<a[^>]+href=["']([^"']+)["'][^>]*class=['"][^'"]*result__a[^'"]*['"][^>]*>([\s\S]*?)<\/a>/g;
+  for (const re of [anchor, anchorAlt]) {
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html))) {
+      const url = cleanUrl(m[1] ?? "");
+      const title = stripTags(m[2] ?? "");
+      if (!url || !title || out.some((r) => r.url === url)) continue;
+      const after = html.slice(re.lastIndex, re.lastIndex + 4000);
+      const snip = after.match(/class=['"][^'"]*result__snippet[^'"]*['"][^>]*>([\s\S]*?)<\/(?:a|div|span|td)>/);
+      out.push({ title, url, snippet: stripTags(snip?.[1] ?? "").slice(0, 500) });
+      if (out.length >= limit) break;
+    }
+    if (out.length) break;
+  }
+  if (!out.length) throw new Error("DuckDuckGo returned no parsable results");
+  return out;
+}
+
 
 /* ------------------------------------------------------------------ */
 /* Source 3 — Wikipedia open search API (real encyclopaedic answers)    */
