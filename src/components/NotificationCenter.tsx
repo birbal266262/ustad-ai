@@ -481,26 +481,44 @@ export function NotificationCenter() {
             <div className="shrink-0 border-b border-border px-4 py-2">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-xs font-medium">🌐 {bnText["label"]}</span>
-                <button
-                  type="button"
-                  data-testid="browser-notify-toggle"
-                  data-on={bnEnabled ? "1" : "0"}
-                  aria-pressed={bnEnabled}
-                  onClick={() => void toggleBrowserNotifications()}
-                  className={`rounded-full px-3 py-1 text-[11px] font-semibold transition-colors ${
-                    bnEnabled
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-sidebar-accent/50 text-muted-foreground"
-                  }`}
-                >
-                  {bnEnabled ? bnText["on"] : bnText["off"]}
-                </button>
+                <div className="flex items-center gap-2">
+                  {bnEnabled ? (
+                    <button
+                      type="button"
+                      data-testid="browser-notify-test"
+                      disabled={bnTesting}
+                      onClick={() => void testBrowserNotification()}
+                      className="rounded-full bg-sidebar-accent/50 px-3 py-1 text-[11px] font-semibold text-muted-foreground transition-colors hover:text-foreground disabled:opacity-60"
+                    >
+                      {bnText["test"]}
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    data-testid="browser-notify-toggle"
+                    data-on={bnEnabled ? "1" : "0"}
+                    aria-pressed={bnEnabled}
+                    onClick={() => void toggleBrowserNotifications()}
+                    className={`rounded-full px-3 py-1 text-[11px] font-semibold transition-colors ${
+                      bnEnabled
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-sidebar-accent/50 text-muted-foreground"
+                    }`}
+                  >
+                    {bnEnabled ? bnText["on"] : bnText["off"]}
+                  </button>
+                </div>
               </div>
               {bnNote ? (
-                <p data-testid="browser-notify-note" className="mt-1 text-[11px] text-destructive">
+                <p
+                  data-testid="browser-notify-note"
+                  data-ok={bnNoteOk ? "1" : "0"}
+                  className={`mt-1 text-[11px] ${bnNoteOk ? "text-muted-foreground" : "text-destructive"}`}
+                >
                   {bnNote}
                 </p>
               ) : null}
+
             </div>
 
 
