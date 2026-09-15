@@ -94,13 +94,20 @@ function ClassroomPage() {
   useEffect(() => {
     let disposed = false;
     let engine: ClassroomEngine | null = null;
+    if (engineRef.current) return;
 
     (async () => {
       const [{ ClassroomEngine: Engine }, { takeClassroomHandoff }] = await Promise.all([
         import("@/lib/classroom2d/engine"),
         import("@/lib/classroom-handoff"),
       ]);
-      const wrap = wrapRef.current;
+      // The stage only exists once the shell is past the identity screen, so
+      // wait for the mount instead of silently giving up (board never appeared).
+      let wrap = wrapRef.current;
+      for (let i = 0; i < 100 && !wrap && !disposed; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+        wrap = wrapRef.current;
+      }
       if (!wrap || disposed) return;
       engine = new Engine();
       engineRef.current = engine;
