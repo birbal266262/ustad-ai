@@ -151,6 +151,10 @@ export function NotificationCenter() {
 
   const [bnEnabled, setBnEnabled] = useState(false);
   const [bnNote, setBnNote] = useState<string | null>(null);
+  /** true when the last note is a success (styled calmly, not as an error). */
+  const [bnNoteOk, setBnNoteOk] = useState(false);
+  const [bnTesting, setBnTesting] = useState(false);
+
   const bnText = BN_TEXT[language as BnLanguage] ?? BN_TEXT.english;
 
   useEffect(() => {
