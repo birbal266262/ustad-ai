@@ -333,6 +333,15 @@ function ShopPage() {
 
   const current = shop?.categories.find((c) => c.id === active) ?? shop?.categories[0] ?? null;
 
+  // The ticket is charged through the SAME central offer pricing as every other
+  // coin spend, so the displayed amount is derived from the server's live offer
+  // state — the client never invents a discount.
+  const ticketOffer = !!shop?.offer.active && shop.offer.discountPct > 0;
+  const ticketPrice = ticketOffer
+    ? offerFinalPrice(GOD_TICKET.price, shop!.offer.discountPct)
+    : GOD_TICKET.price;
+
+
   return (
     <AppShell>
       <PageHeader
