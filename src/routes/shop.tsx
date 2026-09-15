@@ -192,13 +192,28 @@ function ItemCard({
       <div className="mt-4 flex items-center justify-between gap-3">
         <span
           data-testid={`shop-price-${item.itemId}`}
+          data-offer={item.offerActive ? "1" : "0"}
           className="inline-flex items-center gap-1.5 text-sm font-medium"
         >
           <Coins className="size-4 text-amber-400" aria-hidden />
-          {item.priceLabel}
+          {/* The struck-through amount is the REAL catalogue price and the bold
+              one is exactly what the server will charge — both come from the
+              server, never from a client-side calculation. */}
+          {item.offerActive ? (
+            <>
+              <s className="text-xs text-muted-foreground">{item.baseLabel}</s>
+              <span>{item.priceLabel}</span>
+              <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600">
+                {item.discountPct}% OFF
+              </span>
+            </>
+          ) : (
+            item.priceLabel
+          )}
         </span>
         {action}
       </div>
+
     </div>
   );
 }
