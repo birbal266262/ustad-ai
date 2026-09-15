@@ -85,32 +85,42 @@ export function CoinOfferBanner({ token }: { token: string }) {
     };
   }, [token]);
 
-  if (!checked || !state?.available) return null;
+  /**
+   * The banner is shown ONLY for an offer that is genuinely ACTIVE right now:
+   * it exists, it is live per the server, its discount is inside the real
+   * 10–70% range and the window has started but not yet ended. Anything else
+   * (no offer, upcoming, expired, missing discount) renders NOTHING at all —
+   * not an empty box and not reserved space — so the shop layout has no
+   * placeholder gap.
+   */
+  const pct = state?.discountPct ?? 0;
+  const startMs = state?.startIso ? Date.parse(state.startIso) : NaN;
+  const endMs = state?.endIso ? Date.parse(state.endIso) : NaN;
+  const windowOpen =
+    Number.isFinite(startMs) && Number.isFinite(endMs) && now >= startMs && now < endMs;
+  const active =
+    checked &&
+    state?.available === true &&
+    state.live === true &&
+    pct >= 10 &&
+    pct <= 70 &&
+    windowOpen;
 
-  const pct = state.discountPct ?? 0;
+  if (!active) return null;
+
   const language: Language = state.language ?? "english";
   const t = UI_TEXT[language];
 
   const liveBody = `${fillTokens(t.offerLiveBodyLead, { pct })} ${fillTokens(t.offerLiveBodyEnd, {
     time: istClock(state.endIso),
   })}`;
-  const comingBody = `${fillTokens(t.offerComingBodyLead, { pct })} ${fillTokens(
-    t.offerComingBodyBetween,
-    { day: istDay(state.startIso), start: istClock(state.startIso), end: istClock(state.endIso) },
-  )}`;
 
   return (
     <Link
       to="/shop"
       data-testid="coin-offer-banner"
-      aria-label={
-        state.live ? `${t.offerLiveTitle} — ${pct}% OFF` : `${t.offerComingTitle} — ${pct}% OFF`
-      }
-      className={`mb-6 flex flex-col gap-1 rounded-xl border px-4 py-3 no-underline transition-colors hover:border-border/80 sm:flex-row sm:items-center sm:justify-between ${
-        state.live
-          ? "border-amber-400/50 bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-red-500/15 hover:bg-amber-500/20"
-          : "border-border/60 bg-card/60 hover:bg-card"
-      }`}
+      aria-label={`${t.offerLiveTitle} — ${pct}% OFF`}
+      className="mb-6 flex flex-col gap-1 rounded-xl border border-amber-400/50 bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-red-500/15 px-4 py-3 no-underline transition-colors hover:border-border/80 hover:bg-amber-500/20 sm:flex-row sm:items-center sm:justify-between"
     >
       <div className="flex items-start gap-3">
         <span
@@ -120,16 +130,11 @@ export function CoinOfferBanner({ token }: { token: string }) {
           <Flame className="size-5" />
         </span>
         <div>
-          <p
-            data-testid="coin-offer-title"
-            data-live={state.live ? "1" : "0"}
-            className={state.live ? "text-sm font-bold text-amber-600" : "text-sm font-bold"}
-          >
-            {/* An upcoming offer must NOT be headlined as LIVE. */}
-            {state.live ? t.offerLiveTitle : t.offerComingTitle}
+          <p data-testid="coin-offer-title" data-live="1" className="text-sm font-bold text-amber-600">
+            {t.offerLiveTitle}
             <span className="font-semibold"> — {pct}% OFF</span>
           </p>
-          <p className="text-xs text-muted-foreground">{state.live ? liveBody : comingBody}</p>
+          <p className="text-xs text-muted-foreground">{liveBody}</p>
         </div>
       </div>
       <span className="mt-2 shrink-0 self-start rounded-full bg-foreground/5 px-3 py-1 text-[11px] font-semibold text-muted-foreground sm:mt-0 sm:self-center">
@@ -138,3 +143,4 @@ export function CoinOfferBanner({ token }: { token: string }) {
     </Link>
   );
 }
+
