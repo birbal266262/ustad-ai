@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as ClassroomRouteImport } from './routes/classroom'
 import { Route as CrorepatiRouteImport } from './routes/crorepati'
@@ -32,6 +33,11 @@ import { Route as ApiPublicNotificationSchedulerRouteImport } from './routes/api
 import { Route as GalleryShareTokenRouteImport } from './routes/gallery.share.$token'
 import { Route as VerifyCertificateVtokenRouteImport } from './routes/verify.certificate.$vtoken'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -146,6 +152,7 @@ const VerifyCertificateVtokenRoute = VerifyCertificateVtokenRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/classroom': typeof ClassroomRoute
   '/crorepati': typeof CrorepatiRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/verify/certificate/$vtoken': typeof VerifyCertificateVtokenRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/classroom': typeof ClassroomRoute
   '/crorepati': typeof CrorepatiRoute
@@ -195,6 +203,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/classroom': typeof ClassroomRoute
   '/crorepati': typeof CrorepatiRoute
@@ -221,6 +230,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/app'
     | '/classroom'
     | '/crorepati'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/verify/certificate/$vtoken'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/app'
     | '/classroom'
     | '/crorepati'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/verify/certificate/$vtoken'
   id:
     | '__root__'
+    | '/'
     | '/app'
     | '/classroom'
     | '/crorepati'
@@ -294,6 +306,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRoute
   ClassroomRoute: typeof ClassroomRoute
   CrorepatiRoute: typeof CrorepatiRoute
@@ -320,6 +333,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -478,6 +498,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AppRoute: AppRoute,
   ClassroomRoute: ClassroomRoute,
   CrorepatiRoute: CrorepatiRoute,
