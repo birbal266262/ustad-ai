@@ -266,6 +266,9 @@ export const BN_TEXT: Record<BnLanguage, Record<string, string>> = {
     denied: "Blocked in this browser. Allow notifications in site settings.",
     unsupported: "This browser does not support notifications.",
     topLevel: "Open USTAD AI in its own tab to allow notifications.",
+    test: "Test",
+    testOk: "Test notification sent.",
+    testFail: "Browser refused to show the notification.",
   },
   hinglish: {
     label: "Browser Notification",
@@ -274,6 +277,9 @@ export const BN_TEXT: Record<BnLanguage, Record<string, string>> = {
     denied: "Browser ne block kiya hai. Site settings me allow karein.",
     unsupported: "Is browser me notification support nahi hai.",
     topLevel: "Allow karne ke liye USTAD AI ko apne tab me kholein.",
+    test: "Test",
+    testOk: "Test notification bhej diya.",
+    testFail: "Browser ne notification dikhane se mana kar diya.",
   },
   hindi: {
     label: "ब्राउज़र सूचना",
@@ -282,5 +288,8 @@ export const BN_TEXT: Record<BnLanguage, Record<string, string>> = {
     denied: "ब्राउज़र ने रोक दिया है। साइट सेटिंग्स में अनुमति दें।",
     unsupported: "इस ब्राउज़र में सूचना समर्थित नहीं है।",
     topLevel: "अनुमति देने के लिए USTAD AI को अलग टैब में खोलें।",
+    test: "जाँच",
+    testOk: "जाँच सूचना भेज दी गई।",
+    testFail: "ब्राउज़र ने सूचना दिखाने से मना कर दिया।",
   },
 };
