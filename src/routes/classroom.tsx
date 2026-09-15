@@ -161,12 +161,13 @@ function ClassroomPage() {
 
     return () => {
       disposed = true;
+      if (!engine) return; // never tear down a classroom this pass did not create
       orchRef.current?.detach();
       orchRef.current = null;
-      engine?.dispose();
+      engine.dispose();
       engineRef.current = null;
     };
-  }, []);
+  }, [guestId]);
 
   useEffect(() => {
     engineRef.current?.setLanguage(prefLang);
