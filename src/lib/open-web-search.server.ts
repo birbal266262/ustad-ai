@@ -184,10 +184,11 @@ export async function openWebSearch(query: string, limit = 5): Promise<OpenWebSe
   if (!q) return { results: [], source: null, failures: ["Empty search query."] };
 
   const sources: Array<[string, (q: string, n: number) => Promise<OpenWebResult[]>]> = [
-    ["DuckDuckGo", duckDuckGo],
     ["DuckDuckGo Lite", duckDuckGoLite],
+    ["DuckDuckGo", duckDuckGoHtml],
     ["Wikipedia", wikipedia],
   ];
+
 
   const failures: string[] = [];
   for (const [name, fn] of sources) {
