@@ -526,10 +526,6 @@ export async function gatherWeb(
 
   const readers = chain(available, READ_CHAIN);
   for (const url of decision.urls) {
-    if (!readers.length) {
-      failures.push("No page reader (Jina or Firecrawl) is configured.");
-      break;
-    }
     let read = false;
     for (const reader of readers) {
       try {
@@ -542,16 +538,24 @@ export async function gatherWeb(
         failures.push(`${reader.provider} could not read ${url}: ${(e as Error).message}`);
       }
     }
-    if (!read) failures.push(`Could not read ${url} with any configured reader.`);
+    // Keyless LAST-RESORT read: only after every configured reader is absent or
+    // has actually failed, so a working user-selected provider is never
+    // bypassed. No API key is needed, so the user is not forced to configure one.
+    if (!read) {
+      try {
+        const text = await openWebRead(url);
+        context += `\nSource ${url}:\n${text.slice(0, 4000)}\n`;
+        sources.push({ title: url, url });
+        read = true;
+      } catch (e) {
+        failures.push(`Open web read failed for ${url}: ${(e as Error).message}`);
+      }
+    }
+    if (!read) failures.push(`Could not read ${url} with any reader.`);
   }
 
   if (decision.intent === "web" && decision.urls.length === 0) {
     const searchers = chain(available, SEARCH_CHAIN);
-    if (!searchers.length) {
-      failures.push(
-        "No web-search provider (Tavily, EXA, Jina or Firecrawl) is configured in the API Manager.",
-      );
-    }
     const cleaned = buildSearchQuery(query);
     let searched = false;
     for (const searcher of searchers) {
@@ -571,7 +575,25 @@ export async function gatherWeb(
         failures.push(`${searcher.provider}: ${(e as Error).message}`);
       }
     }
-    if (!searched && searchers.length) failures.push("Every configured search provider failed.");
+
+    // Keyless open-web fallback: real live search over public sources, used only
+    // when no search provider is configured or every configured one failed.
+    if (!searched) {
+      const open = await openWebSearch(cleaned, 5);
+      if (open.results.length) {
+        for (const r of open.results) {
+          context += `\n[${r.title}] ${r.url}\n${r.snippet}\n`;
+          sources.push({ title: r.title, url: r.url });
+        }
+        searched = true;
+      } else {
+        failures.push(
+          searchers.length
+            ? `Every configured search provider failed and the open web search also failed. ${open.failures.join(" ")}`
+            : `No web-search provider is configured and the open web search failed. ${open.failures.join(" ")}`,
+        );
+      }
+    }
   }
 
   const result: {
@@ -582,3 +604,4 @@ export async function gatherWeb(
   if (!sources.length && failures.length) result.webError = failures.join(" ");
   return result;
 }
+
