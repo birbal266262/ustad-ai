@@ -102,7 +102,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           className="hide-scrollbar flex min-w-0 flex-1 flex-row items-stretch gap-1 overflow-x-auto overscroll-x-contain md:flex-col md:overflow-visible"
         >
           {NAV.map((item) => {
-            const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+            const active = item.to === "/app" ? pathname === "/app" : pathname.startsWith(item.to);
             const Icon = item.icon;
             return (
               <Link
