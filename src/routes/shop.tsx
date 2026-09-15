@@ -23,6 +23,8 @@ import { useCosmetics } from "@/lib/useCosmetics";
 import { isEquippableCategory, badgeVisualFor, nameStyleVisualFor } from "@/lib/cosmetics-spec";
 import { cosmeticsEquipFn, cosmeticsUnequipFn } from "@/lib/cosmetics.functions";
 import { CoinOfferBanner } from "@/components/CoinOfferBanner";
+import { offerFinalPrice } from "@/lib/coin-offer-spec";
+
 
 export const Route = createFileRoute("/shop")({
   head: () => ({
