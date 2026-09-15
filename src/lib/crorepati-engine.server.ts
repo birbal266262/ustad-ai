@@ -45,13 +45,21 @@ async function getEvent(): Promise<Row> {
     .eq("code", CROREPATI_EVENT_CODE)
     .maybeSingle();
   if (data) return data;
+  // Same race as crorepati-entry.server.ts: upsert on the unique code, then
+  // fall back to reading the row a concurrent request just created.
   const { data: created, error } = await client
     .from("crorepati_events")
-    .insert({ code: CROREPATI_EVENT_CODE, title: "Kon Banega Crorepati" })
+    .upsert({ code: CROREPATI_EVENT_CODE, title: "Kon Banega Crorepati" }, { onConflict: "code" })
     .select()
-    .single();
-  if (error) throw new Error(error.message);
-  return created;
+    .maybeSingle();
+  if (created) return created;
+  const { data: existing } = await client
+    .from("crorepati_events")
+    .select("*")
+    .eq("code", CROREPATI_EVENT_CODE)
+    .maybeSingle();
+  if (existing) return existing;
+  throw new Error(error?.message ?? "Could not load the Crorepati event.");
 }
 
 async function rewardLadder(
