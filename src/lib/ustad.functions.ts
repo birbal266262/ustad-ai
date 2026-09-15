@@ -251,7 +251,16 @@ export const generateNotesFn = createServerFn({ method: "POST" })
 /* ---- voice ---- */
 
 export const synthesizeFn = createServerFn({ method: "POST" })
-  .inputValidator((d: { token: string; text: string; provider?: string; language?: string }) => d)
+  .inputValidator(
+    (d: {
+      token: string;
+      text: string;
+      provider?: string;
+      language?: string;
+      /** failover stage: "lovable" | "api_manager" | "auto" */
+      stage?: string;
+    }) => d,
+  )
   .handler(async ({ data: d }) => voice.synthesize(d));
 
 export const transcribeFn = createServerFn({ method: "POST" })

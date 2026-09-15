@@ -238,7 +238,9 @@ export class ClassroomEngine {
 
   setLanguage(lang: LessonLang): void {
     this.lang = lang;
-    this.audio.setLang(lang === "hindi" ? "hi-IN" : "en-IN");
+    // Language authority (§1/§10): pass the CLASSROOM language through as-is so
+    // Hinglish stays Hinglish instead of collapsing into plain English voice.
+    this.audio.setLang(lang);
     this.voice.setLang(lang === "english" ? "en-IN" : "hi-IN");
     this.state.set({ lang });
   }
