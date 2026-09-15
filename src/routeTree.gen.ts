@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as ClassroomRouteImport } from './routes/classroom'
 import { Route as CrorepatiRouteImport } from './routes/crorepati'
 import { Route as EventsRouteImport } from './routes/events'
@@ -35,6 +36,11 @@ import { Route as VerifyCertificateVtokenRouteImport } from './routes/verify.cer
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClassroomRoute = ClassroomRouteImport.update({
@@ -147,6 +153,7 @@ const VerifyCertificateVtokenRoute = VerifyCertificateVtokenRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/classroom': typeof ClassroomRoute
   '/crorepati': typeof CrorepatiRoute
   '/events': typeof EventsRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/classroom': typeof ClassroomRoute
   '/crorepati': typeof CrorepatiRoute
   '/events': typeof EventsRoute
@@ -196,6 +204,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/classroom': typeof ClassroomRoute
   '/crorepati': typeof CrorepatiRoute
   '/events': typeof EventsRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/classroom'
     | '/crorepati'
     | '/events'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/app'
     | '/classroom'
     | '/crorepati'
     | '/events'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/classroom'
     | '/crorepati'
     | '/events'
@@ -295,6 +307,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRoute
   ClassroomRoute: typeof ClassroomRoute
   CrorepatiRoute: typeof CrorepatiRoute
   EventsRoute: typeof EventsRoute
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/classroom': {
@@ -479,6 +499,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRoute,
   ClassroomRoute: ClassroomRoute,
   CrorepatiRoute: CrorepatiRoute,
   EventsRoute: EventsRoute,
