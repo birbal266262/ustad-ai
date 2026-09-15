@@ -150,13 +150,47 @@ export type BrowserNotifyPayload = {
   path?: string;
 };
 
+/** Honest result of one delivery attempt — never a fake success. */
+export type BrowserDelivery = {
+  ok: boolean;
+  /** How it was delivered (or attempted). */
+  via: "service-worker" | "page" | "none";
+  /** Real reason when `ok` is false. */
+  reason?: "unsupported" | "not-granted" | "sw-failed" | "page-failed";
+  error?: string;
+};
+
+/**
+ * Wait (briefly) for an ACTIVE service worker registration. Chrome on Android
+ * refuses page-level `new Notification()`, so the SW path is the only reliable
+ * one there; before this the code used `getRegistration()` which returns
+ * undefined while the worker is still installing, so early notifications fell
+ * back to the page constructor and were silently dropped.
+ */
+async function activeRegistration(timeoutMs = 3000): Promise<ServiceWorkerRegistration | null> {
+  if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return null;
+  try {
+    const existing = await navigator.serviceWorker.getRegistration();
+    if (existing?.active) return existing;
+    const ready = navigator.serviceWorker.ready;
+    const timer = new Promise<null>((resolve) => setTimeout(() => resolve(null), timeoutMs));
+    return (await Promise.race([ready, timer])) ?? existing ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Show a real system notification. Prefers the service worker (required by
  * Chrome on Android and the only path that survives a backgrounded tab), and
- * falls back to the page-level Notification constructor.
+ * falls back to the page-level Notification constructor. The result reports
+ * exactly what happened so the UI never claims a delivery that did not occur.
  */
-export async function showBrowserNotification(p: BrowserNotifyPayload): Promise<boolean> {
-  if (!browserNotifySupported() || window.Notification.permission !== "granted") return false;
+export async function showBrowserNotification(p: BrowserNotifyPayload): Promise<BrowserDelivery> {
+  if (!browserNotifySupported()) return { ok: false, via: "none", reason: "unsupported" };
+  if (window.Notification.permission !== "granted")
+    return { ok: false, via: "none", reason: "not-granted" };
+
   const options: NotificationOptions = {
     body: p.body ?? "",
     tag: p.tag,
@@ -164,15 +198,18 @@ export async function showBrowserNotification(p: BrowserNotifyPayload): Promise<
     badge: "/icons/ustad-192.png",
     data: { path: p.path ?? "/", tag: p.tag },
   };
-  try {
-    const reg = await navigator.serviceWorker?.getRegistration?.();
-    if (reg?.showNotification) {
+
+  let swError = "";
+  const reg = await activeRegistration();
+  if (reg?.showNotification) {
+    try {
       await reg.showNotification(p.title, options);
-      return true;
+      return { ok: true, via: "service-worker" };
+    } catch (e) {
+      swError = (e as Error)?.message ?? "service worker notification failed";
     }
-  } catch {
-    /* fall through to the page-level notification */
   }
+
   try {
     const n = new window.Notification(p.title, options);
     n.onclick = () => {
@@ -184,11 +221,36 @@ export async function showBrowserNotification(p: BrowserNotifyPayload): Promise<
       }
       n.close();
     };
-    return true;
-  } catch {
-    return false;
+    return { ok: true, via: "page" };
+  } catch (e) {
+    return {
+      ok: false,
+      via: reg ? "service-worker" : "page",
+      reason: reg ? "sw-failed" : "page-failed",
+      error: swError || (e as Error)?.message || "",
+    };
   }
 }
+
+/**
+ * Deliver a REAL test notification and report honestly whether the operating
+ * system accepted it. Never marks itself delivered when the browser refused.
+ */
+export async function sendTestNotification(): Promise<BrowserDelivery> {
+  if (!browserNotifySupported()) return { ok: false, via: "none", reason: "unsupported" };
+  if (window.Notification.permission !== "granted") {
+    const status = await requestBrowserPermission();
+    if (status !== "ok")
+      return { ok: false, via: "none", reason: status === "denied" ? "not-granted" : "unsupported" };
+  }
+  return showBrowserNotification({
+    tag: `ustad-test-${Date.now()}`,
+    title: "USTAD AI",
+    body: "Browser notification working ✅",
+    path: "/",
+  });
+}
+
 
 /* ------------------------------------------------------------------ */
 /* copy (follows the existing Settings language)                       */
