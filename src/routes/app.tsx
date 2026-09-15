@@ -47,7 +47,7 @@ import {
 import { hasDeviceAi, runDeviceText } from "@/lib/browser-ai";
 
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/app")({
   head: () => ({
     meta: [
       { title: "USTAD AI — Guest AI Tutor, Chat, Exams & Notes" },
