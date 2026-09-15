@@ -13,7 +13,9 @@
  */
 import { requireGuest, db } from "./guest.server";
 import { notifyGuest } from "./notification.server";
-import { coinOfferPrice } from "./coin-offer.server";
+import { activeOffer, coinOfferPrice } from "./coin-offer.server";
+import { offerFinalPrice } from "./coin-offer-spec";
+
 import {
   formatCoins,
   isValidCoinAmount,
