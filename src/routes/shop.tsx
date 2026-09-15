@@ -359,14 +359,25 @@ function ShopPage() {
         <div className="min-w-0">
           <h2 className="font-medium">🎟️ {GOD_TICKET.name}</h2>
           <p className="text-sm text-muted-foreground">{GOD_TICKET.description}</p>
-          <p className="mt-1 text-sm">
-            🪙 {formatIndianCoins(GOD_TICKET.price)} · you own{" "}
-            <span data-testid="god-ticket-count">{tickets}</span>
+          <p className="mt-1 text-sm" data-testid="god-ticket-price" data-offer={ticketOffer ? "1" : "0"}>
+            {ticketOffer ? (
+              <>
+                🪙 <s className="text-xs text-muted-foreground">{formatIndianCoins(GOD_TICKET.price)}</s>{" "}
+                {formatIndianCoins(ticketPrice)}{" "}
+                <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600">
+                  {shop?.offer.discountPct}% OFF
+                </span>
+              </>
+            ) : (
+              <>🪙 {formatIndianCoins(ticketPrice)}</>
+            )}{" "}
+            · you own <span data-testid="god-ticket-count">{tickets}</span>
           </p>
         </div>
         <Button
           data-testid="buy-god-ticket"
-          disabled={buyingTicket || !shop || shop.wallet.balance < GOD_TICKET.price}
+          disabled={buyingTicket || !shop || shop.wallet.balance < ticketPrice}
+
           onClick={buyTicket}
           className="gap-1.5"
         >
