@@ -23,6 +23,8 @@ import { useCosmetics } from "@/lib/useCosmetics";
 import { isEquippableCategory, badgeVisualFor, nameStyleVisualFor } from "@/lib/cosmetics-spec";
 import { cosmeticsEquipFn, cosmeticsUnequipFn } from "@/lib/cosmetics.functions";
 import { CoinOfferBanner } from "@/components/CoinOfferBanner";
+import { offerFinalPrice } from "@/lib/coin-offer-spec";
+
 
 export const Route = createFileRoute("/shop")({
   head: () => ({
@@ -192,13 +194,28 @@ function ItemCard({
       <div className="mt-4 flex items-center justify-between gap-3">
         <span
           data-testid={`shop-price-${item.itemId}`}
+          data-offer={item.offerActive ? "1" : "0"}
           className="inline-flex items-center gap-1.5 text-sm font-medium"
         >
           <Coins className="size-4 text-amber-400" aria-hidden />
-          {item.priceLabel}
+          {/* The struck-through amount is the REAL catalogue price and the bold
+              one is exactly what the server will charge — both come from the
+              server, never from a client-side calculation. */}
+          {item.offerActive ? (
+            <>
+              <s className="text-xs text-muted-foreground">{item.baseLabel}</s>
+              <span>{item.priceLabel}</span>
+              <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600">
+                {item.discountPct}% OFF
+              </span>
+            </>
+          ) : (
+            item.priceLabel
+          )}
         </span>
         {action}
       </div>
+
     </div>
   );
 }
@@ -318,6 +335,15 @@ function ShopPage() {
 
   const current = shop?.categories.find((c) => c.id === active) ?? shop?.categories[0] ?? null;
 
+  // The ticket is charged through the SAME central offer pricing as every other
+  // coin spend, so the displayed amount is derived from the server's live offer
+  // state — the client never invents a discount.
+  const ticketOffer = !!shop?.offer.active && shop.offer.discountPct > 0;
+  const ticketPrice = ticketOffer
+    ? offerFinalPrice(GOD_TICKET.price, shop!.offer.discountPct)
+    : GOD_TICKET.price;
+
+
   return (
     <AppShell>
       <PageHeader
@@ -344,14 +370,25 @@ function ShopPage() {
         <div className="min-w-0">
           <h2 className="font-medium">🎟️ {GOD_TICKET.name}</h2>
           <p className="text-sm text-muted-foreground">{GOD_TICKET.description}</p>
-          <p className="mt-1 text-sm">
-            🪙 {formatIndianCoins(GOD_TICKET.price)} · you own{" "}
-            <span data-testid="god-ticket-count">{tickets}</span>
+          <p className="mt-1 text-sm" data-testid="god-ticket-price" data-offer={ticketOffer ? "1" : "0"}>
+            {ticketOffer ? (
+              <>
+                🪙 <s className="text-xs text-muted-foreground">{formatIndianCoins(GOD_TICKET.price)}</s>{" "}
+                {formatIndianCoins(ticketPrice)}{" "}
+                <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600">
+                  {shop?.offer.discountPct}% OFF
+                </span>
+              </>
+            ) : (
+              <>🪙 {formatIndianCoins(ticketPrice)}</>
+            )}{" "}
+            · you own <span data-testid="god-ticket-count">{tickets}</span>
           </p>
         </div>
         <Button
           data-testid="buy-god-ticket"
-          disabled={buyingTicket || !shop || shop.wallet.balance < GOD_TICKET.price}
+          disabled={buyingTicket || !shop || shop.wallet.balance < ticketPrice}
+
           onClick={buyTicket}
           className="gap-1.5"
         >

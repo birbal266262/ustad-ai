@@ -40,8 +40,10 @@ import {
   getBrowserNotifyEnabled,
   requestBrowserPermission,
   seedDelivered,
+  sendTestNotification,
   setBrowserNotifyEnabled,
   showBrowserNotification,
+
   type BnLanguage,
 } from "@/lib/browser-notify";
 
@@ -149,6 +151,10 @@ export function NotificationCenter() {
 
   const [bnEnabled, setBnEnabled] = useState(false);
   const [bnNote, setBnNote] = useState<string | null>(null);
+  /** true when the last note is a success (styled calmly, not as an error). */
+  const [bnNoteOk, setBnNoteOk] = useState(false);
+  const [bnTesting, setBnTesting] = useState(false);
+
   const bnText = BN_TEXT[language as BnLanguage] ?? BN_TEXT.english;
 
   useEffect(() => {
@@ -195,21 +201,26 @@ export function NotificationCenter() {
     };
   }, [bnEnabled, ready, deliverPending]);
 
+  const note = (text: string | undefined, ok: boolean) => {
+    setBnNote(text ?? null);
+    setBnNoteOk(ok);
+  };
+
   const toggleBrowserNotifications = async () => {
     if (!guestId) return;
-    setBnNote(null);
+    note(undefined, false);
     if (bnEnabled) {
       setBrowserNotifyEnabled(guestId, false);
       setBnEnabled(false);
       return;
     }
     if (!browserNotifySupported()) {
-      setBnNote(bnText["unsupported"] ?? null);
+      note(bnText["unsupported"], false);
       return;
     }
     const status = await requestBrowserPermission();
     if (status !== "ok") {
-      setBnNote((status === "denied" ? bnText["denied"] : bnText["topLevel"]) ?? null);
+      note(status === "denied" ? bnText["denied"] : bnText["topLevel"], false);
       return;
     }
     // Enabling must not dump the whole existing backlog into the OS: mark what
@@ -228,6 +239,29 @@ export function NotificationCenter() {
     setBrowserNotifyEnabled(guestId, true);
     setBnEnabled(true);
   };
+
+  /**
+   * REAL end-to-end check: asks the browser to show one system notification now
+   * and reports exactly what the browser did — a refusal is never shown as
+   * success.
+   */
+  const testBrowserNotification = async () => {
+    setBnTesting(true);
+    note(undefined, false);
+    try {
+      const result = await sendTestNotification();
+      if (result.ok) {
+        note(bnText["testOk"], true);
+        return;
+      }
+      if (result.reason === "unsupported") note(bnText["unsupported"], false);
+      else if (result.reason === "not-granted") note(bnText["denied"], false);
+      else note(`${bnText["testFail"]}${result.error ? ` (${result.error})` : ""}`, false);
+    } finally {
+      setBnTesting(false);
+    }
+  };
+
 
   /* ---------------- feed ---------------- */
 
@@ -447,26 +481,44 @@ export function NotificationCenter() {
             <div className="shrink-0 border-b border-border px-4 py-2">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-xs font-medium">🌐 {bnText["label"]}</span>
-                <button
-                  type="button"
-                  data-testid="browser-notify-toggle"
-                  data-on={bnEnabled ? "1" : "0"}
-                  aria-pressed={bnEnabled}
-                  onClick={() => void toggleBrowserNotifications()}
-                  className={`rounded-full px-3 py-1 text-[11px] font-semibold transition-colors ${
-                    bnEnabled
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-sidebar-accent/50 text-muted-foreground"
-                  }`}
-                >
-                  {bnEnabled ? bnText["on"] : bnText["off"]}
-                </button>
+                <div className="flex items-center gap-2">
+                  {bnEnabled ? (
+                    <button
+                      type="button"
+                      data-testid="browser-notify-test"
+                      disabled={bnTesting}
+                      onClick={() => void testBrowserNotification()}
+                      className="rounded-full bg-sidebar-accent/50 px-3 py-1 text-[11px] font-semibold text-muted-foreground transition-colors hover:text-foreground disabled:opacity-60"
+                    >
+                      {bnText["test"]}
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    data-testid="browser-notify-toggle"
+                    data-on={bnEnabled ? "1" : "0"}
+                    aria-pressed={bnEnabled}
+                    onClick={() => void toggleBrowserNotifications()}
+                    className={`rounded-full px-3 py-1 text-[11px] font-semibold transition-colors ${
+                      bnEnabled
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-sidebar-accent/50 text-muted-foreground"
+                    }`}
+                  >
+                    {bnEnabled ? bnText["on"] : bnText["off"]}
+                  </button>
+                </div>
               </div>
               {bnNote ? (
-                <p data-testid="browser-notify-note" className="mt-1 text-[11px] text-destructive">
+                <p
+                  data-testid="browser-notify-note"
+                  data-ok={bnNoteOk ? "1" : "0"}
+                  className={`mt-1 text-[11px] ${bnNoteOk ? "text-muted-foreground" : "text-destructive"}`}
+                >
                   {bnNote}
                 </p>
               ) : null}
+
             </div>
 
 

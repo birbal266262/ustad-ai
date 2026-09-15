@@ -13,7 +13,9 @@
  */
 import { requireGuest, db } from "./guest.server";
 import { notifyGuest } from "./notification.server";
-import { coinOfferPrice } from "./coin-offer.server";
+import { activeOffer, coinOfferPrice } from "./coin-offer.server";
+import { offerFinalPrice } from "./coin-offer-spec";
+
 import {
   formatCoins,
   isValidCoinAmount,
@@ -236,8 +238,15 @@ export type ShopItemView = {
   itemId: string;
   name: string;
   category: string;
+  /** What the guest actually pays right now (offer price when one is live). */
   price: number;
   priceLabel: string;
+  /** Catalogue price before any live offer discount. */
+  basePrice: number;
+  baseLabel: string;
+  /** Live offer discount applied to this item, 0 when no offer is active. */
+  discountPct: number;
+  offerActive: boolean;
   description: string;
   assetReference: string;
   availability: string;
@@ -249,6 +258,8 @@ export type ShopItemView = {
 export type ShopView = {
   wallet: WalletView;
   balanceLabel: string;
+  /** Real live-offer state, so the UI never invents a discount. */
+  offer: { active: boolean; discountPct: number; endsAt: string | null };
   categories: Array<{ id: string; label: string; blurb: string; items: ShopItemView[] }>;
 };
 
@@ -276,6 +287,11 @@ export async function getShop(token: unknown): Promise<ShopView> {
     .eq("ownership_status", "owned");
   const owned = new Set(((ownedData as Row[] | null) ?? []).map((p) => String(p["item_id"])));
 
+  // ONE offer read for the whole catalogue: the same central pricing authority
+  // that `buyItem` charges through, so the displayed price and the charged
+  // price can never disagree.
+  const liveOffer = await activeOffer().catch(() => null);
+
   const categories = SHOP_CATEGORIES.map((c) => ({
     id: c.id as string,
     label: c.label as string,
@@ -283,13 +299,19 @@ export async function getShop(token: unknown): Promise<ShopView> {
     items: items
       .filter((i) => String(i["category"]) === c.id)
       .map((i) => {
-        const price = Number(i["price_coins"] ?? 0);
+        const basePrice = Number(i["price_coins"] ?? 0);
+        const discountPct = liveOffer && basePrice > 0 ? liveOffer.discountPct : 0;
+        const price = discountPct ? offerFinalPrice(basePrice, discountPct) : basePrice;
         return {
           itemId: String(i["item_id"]),
           name: String(i["name"]),
           category: String(i["category"]),
           price,
           priceLabel: formatCoins(price),
+          basePrice,
+          baseLabel: formatCoins(basePrice),
+          discountPct,
+          offerActive: discountPct > 0,
           description: String(i["description"] ?? ""),
           assetReference: String(i["asset_reference"] ?? ""),
           availability: String(i["availability"] ?? "permanent"),
@@ -300,8 +322,18 @@ export async function getShop(token: unknown): Promise<ShopView> {
       }),
   })).filter((c) => c.items.length > 0);
 
-  return { wallet, balanceLabel: formatCoins(wallet.balance), categories };
+  return {
+    wallet,
+    balanceLabel: formatCoins(wallet.balance),
+    offer: {
+      active: !!liveOffer,
+      discountPct: liveOffer?.discountPct ?? 0,
+      endsAt: liveOffer?.endIso ?? null,
+    },
+    categories,
+  };
 }
+
 
 export type PurchaseResult = {
   ok: boolean;
