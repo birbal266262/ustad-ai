@@ -688,7 +688,7 @@ function ChatPage() {
                 ))}
               </div>
             ) : null}
-            <div className="panel flex items-end gap-1 p-2">
+            <div className="panel flex w-full max-w-full flex-wrap items-end gap-1 p-2">
               <input
                 ref={fileRef}
                 type="file"
@@ -723,6 +723,7 @@ function ChatPage() {
                   galleryRef.current?.click();
                 }}
                 aria-label="Add photo from gallery"
+                className="order-2 shrink-0 sm:order-none"
               >
                 <ImageIcon className="size-4" />
               </Button>
@@ -736,6 +737,7 @@ function ChatPage() {
                   fileRef.current?.click();
                 }}
                 aria-label="Attach file"
+                className="order-2 shrink-0 sm:order-none"
               >
                 {uploading ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -752,6 +754,7 @@ function ChatPage() {
                   setCameraOpen(true);
                 }}
                 aria-label="Open camera"
+                className="order-2 shrink-0 sm:order-none"
               >
                 <Camera className="size-4" />
               </Button>
@@ -761,6 +764,7 @@ function ChatPage() {
                 size="icon"
                 onClick={() => void toggleRecording()}
                 aria-label="Voice input"
+                className="order-2 shrink-0 sm:order-none"
               >
                 <Mic className="size-4" />
               </Button>
@@ -774,7 +778,7 @@ function ChatPage() {
                   }
                 }}
                 placeholder="USTAD se kuch bhi poocho…"
-                className="max-h-40 min-h-11 flex-1 resize-none border-0 bg-transparent focus-visible:ring-0"
+                className="order-1 max-h-40 min-h-11 w-full min-w-0 basis-full resize-none border-0 bg-transparent focus-visible:ring-0 sm:order-none sm:w-auto sm:flex-1 sm:basis-auto"
               />
               <Button
                 type="button"
@@ -782,6 +786,7 @@ function ChatPage() {
                 disabled={busy}
                 size="icon"
                 aria-label="Send"
+                className="order-3 ml-auto shrink-0 sm:order-none sm:ml-0"
               >
                 {busy ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
               </Button>
