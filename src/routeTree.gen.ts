@@ -17,6 +17,7 @@ import { Route as EventsRouteImport } from './routes/events'
 import { Route as GodTournamentRouteImport } from './routes/god-tournament'
 import { Route as MegaRouteImport } from './routes/mega'
 import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as NextRouteImport } from './routes/next'
 import { Route as NotesRouteImport } from './routes/notes'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -71,6 +72,11 @@ const MegaRoute = MegaRouteImport.update({
 const MemoryRoute = MemoryRouteImport.update({
   id: '/memory',
   path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NextRoute = NextRouteImport.update({
+  id: '/next',
+  path: '/next',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotesRoute = NotesRouteImport.update({
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/god-tournament': typeof GodTournamentRoute
   '/mega': typeof MegaRoute
   '/memory': typeof MemoryRoute
+  '/next': typeof NextRoute
   '/notes': typeof NotesRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/god-tournament': typeof GodTournamentRoute
   '/mega': typeof MegaRoute
   '/memory': typeof MemoryRoute
+  '/next': typeof NextRoute
   '/notes': typeof NotesRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/god-tournament': typeof GodTournamentRoute
   '/mega': typeof MegaRoute
   '/memory': typeof MemoryRoute
+  '/next': typeof NextRoute
   '/notes': typeof NotesRoute
   '/reminders': typeof RemindersRoute
   '/settings': typeof SettingsRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/god-tournament'
     | '/mega'
     | '/memory'
+    | '/next'
     | '/notes'
     | '/reminders'
     | '/settings'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/god-tournament'
     | '/mega'
     | '/memory'
+    | '/next'
     | '/notes'
     | '/reminders'
     | '/settings'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/god-tournament'
     | '/mega'
     | '/memory'
+    | '/next'
     | '/notes'
     | '/reminders'
     | '/settings'
@@ -314,6 +326,7 @@ export interface RootRouteChildren {
   GodTournamentRoute: typeof GodTournamentRoute
   MegaRoute: typeof MegaRoute
   MemoryRoute: typeof MemoryRoute
+  NextRoute: typeof NextRoute
   NotesRoute: typeof NotesRoute
   RemindersRoute: typeof RemindersRoute
   SettingsRoute: typeof SettingsRoute
@@ -387,6 +400,13 @@ declare module '@tanstack/react-router' {
       path: '/memory'
       fullPath: '/memory'
       preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/next': {
+      id: '/next'
+      path: '/next'
+      fullPath: '/next'
+      preLoaderRoute: typeof NextRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notes': {
@@ -506,6 +526,7 @@ const rootRouteChildren: RootRouteChildren = {
   GodTournamentRoute: GodTournamentRoute,
   MegaRoute: MegaRoute,
   MemoryRoute: MemoryRoute,
+  NextRoute: NextRoute,
   NotesRoute: NotesRoute,
   RemindersRoute: RemindersRoute,
   SettingsRoute: SettingsRoute,
