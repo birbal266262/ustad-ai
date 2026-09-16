@@ -21,6 +21,11 @@ import {
 import { useGuest, shortId } from "@/lib/ustad-client";
 import { IdentityScreen, SecureDeviceNotice } from "@/components/IdentityScreen";
 import { GlassIdentityStage } from "@/components/entry/GlassIdentityStage";
+import {
+  JourneyCinematic,
+  JOURNEY_FLAG_KEY,
+  JOURNEY_NAME_KEY,
+} from "@/components/entry/JourneyCinematic";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { UstadLogo } from "@/components/UstadLogo";
 import { NotificationCenter } from "@/components/NotificationCenter";
