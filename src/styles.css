@@ -190,6 +190,9 @@
     /* Avoid the "sticky 100vh on Android Chrome" trap; dvh grows/shrinks with
        the dynamic toolbar so the mobile nav and chat input are never cropped. */
     min-height: 100dvh;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
     overscroll-behavior-y: none;
   }
 
