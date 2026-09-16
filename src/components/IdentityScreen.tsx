@@ -230,7 +230,7 @@ export function IdentityScreen() {
               submitLabel={t.createGuestId}
               onCancel={() => setMode("choose")}
               onSubmit={async (username, password) => {
-                await run(() => createIdentity(username, password));
+                await run(() => createIdentity(username, password), username);
               }}
             />
           ) : (
@@ -240,7 +240,7 @@ export function IdentityScreen() {
               submitLabel={t.restoreBackup}
               onCancel={() => setMode("choose")}
               onSubmit={async (username, password) => {
-                await run(() => restoreIdentity(username, password));
+                await run(() => restoreIdentity(username, password), username);
               }}
             />
           )}
