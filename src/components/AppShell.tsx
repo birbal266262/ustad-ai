@@ -21,6 +21,7 @@ import {
 import { useGuest, shortId } from "@/lib/ustad-client";
 import { IdentityScreen, SecureDeviceNotice } from "@/components/IdentityScreen";
 import { GlassIdentityStage } from "@/components/entry/GlassIdentityStage";
+import { ENTRY_REVEAL_KEY } from "@/components/entry/CinematicEntry";
 import {
   JourneyCinematic,
   JOURNEY_FLAG_KEY,
@@ -71,6 +72,15 @@ export function AppShell({ children }: { children: ReactNode }) {
       /* no cinematic — the app behaves exactly as before */
     }
   }, [session]);
+  // True while the one-shot cinematic hand-over is still in progress.
+  const [entryPending, setEntryPending] = useState(false);
+  useEffect(() => {
+    try {
+      setEntryPending(window.sessionStorage.getItem(ENTRY_REVEAL_KEY) === "1");
+    } catch {
+      setEntryPending(false);
+    }
+  }, [status]);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { enabled: nextMode, setEnabled: setNextMode } = useNextMode();
   const pageKind = pathname === "/app"
