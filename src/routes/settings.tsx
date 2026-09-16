@@ -867,6 +867,27 @@ function PrefsPanel() {
           />
         </div>
       ))}
+
+      {/*
+       * NEW USTAD AI — a VISUAL MODE of this same app. It opens the existing
+       * routes with the existing session/data; it is not a second app, identity
+       * or database. Every pre-existing preference above stays untouched.
+       */}
+      <div className="nx-pref-entry">
+        <span className="nx-pref-icon" aria-hidden="true">
+          <Sparkles className="size-5" />
+        </span>
+        <div className="min-w-0 space-y-2">
+          <p className="font-display text-sm font-semibold">NEW USTAD AI</p>
+          <p className="text-xs text-muted-foreground">Next-generation USTAD AI experience</p>
+          <Link
+            to="/next"
+            className="inline-flex min-h-10 items-center gap-2 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground transition-transform active:scale-95"
+          >
+            OPEN NEW USTAD AI <ArrowRight className="size-4" />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
