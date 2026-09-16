@@ -1,6 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Loader2, KeyRound, User, Sliders, ShieldAlert, Trash2, Plug, Images } from "lucide-react";
+import {
+  Loader2,
+  KeyRound,
+  User,
+  Sliders,
+  ShieldAlert,
+  Trash2,
+  Plug,
+  Images,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { GallerySection } from "@/components/GallerySection";
