@@ -135,6 +135,7 @@ export function CinematicEntry({ onDone }: { onDone: () => void }) {
               <span className="ce-leg b" />
               <span className="ce-arm back" />
               <span className="ce-arm front" />
+              {phase === "reveal" ? <span className="ce-walker-case" /> : null}
             </div>
           </div>
         ) : null}
