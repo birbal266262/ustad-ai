@@ -597,3 +597,106 @@
   from { rotate: -5deg; }
   to { rotate: 5deg; }
 }
+
+/* ---------------- card rising out of the suitcase ---------------- */
+/* Visual only: this is the bridge shot so the reveal never cuts off
+   between the opened suitcase and the real Guest ID card. */
+.ce-rise-card {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  width: clamp(11rem, 46vw, 17rem);
+  aspect-ratio: 5 / 7;
+  translate: -50% -50%;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+  perspective: 800px;
+  animation: ce-rise-card 2.5s cubic-bezier(0.22, 0.8, 0.28, 1) 150ms both;
+}
+
+@keyframes ce-rise-card {
+  0% { opacity: 0; transform: translateY(5rem) scale(0.28); filter: blur(7px); }
+  28% { opacity: 1; filter: blur(1.5px); }
+  62% { opacity: 1; transform: translateY(-5.5rem) scale(1); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(-6.5rem) scale(1.06); filter: blur(0); }
+}
+
+.ce-rise-glass {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.3rem;
+  border: 1px solid oklch(0.96 0.03 225 / 0.5);
+  background: linear-gradient(150deg, oklch(1 0 0 / 0.22), oklch(0.8 0.06 230 / 0.1) 50%, oklch(1 0 0 / 0.16));
+  box-shadow:
+    0 2rem 3.4rem -1.4rem oklch(0.04 0.02 250 / 0.85),
+    inset 0 1px 0 oklch(1 0 0 / 0.45);
+  backdrop-filter: blur(6px) saturate(130%);
+  animation: ce-rise-tilt 2.5s ease-out 150ms both;
+}
+
+@keyframes ce-rise-tilt {
+  0% { transform: rotateX(46deg) rotateZ(-6deg); }
+  70% { transform: rotateX(4deg) rotateZ(1deg); }
+  100% { transform: rotateX(0deg) rotateZ(0deg); }
+}
+
+.ce-rise-line {
+  position: absolute;
+  left: 12%;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: oklch(1 0 0 / 0.35);
+}
+
+.ce-rise-line.a { top: 62%; width: 58%; }
+.ce-rise-line.b { top: 72%; width: 40%; }
+
+.ce-rise-chip {
+  position: absolute;
+  left: 12%;
+  top: 16%;
+  width: 3.2rem;
+  height: 2.4rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(140deg, oklch(0.88 0.12 92 / 0.85), oklch(0.7 0.1 92 / 0.55));
+}
+
+.ce-rise-beam {
+  position: absolute;
+  left: 50%;
+  bottom: -2rem;
+  width: 120%;
+  height: 10rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, oklch(0.92 0.12 210 / 0.5), transparent 75%);
+  filter: blur(6px);
+  animation: ce-rise-beam 2.5s ease-out 150ms both;
+}
+
+@keyframes ce-rise-beam {
+  0% { opacity: 0.9; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* Hand over on a rise, not a hard cut. */
+.ce-overlay[data-closing="true"] {
+  animation: ce-fade-out 620ms ease-in both;
+}
+
+.ce-overlay[data-closing="true"] .ce-rise-card {
+  animation: ce-rise-handoff 620ms ease-in both;
+}
+
+@keyframes ce-rise-handoff {
+  from { opacity: 1; transform: translateY(-6.5rem) scale(1.06); }
+  to { opacity: 0; transform: translateY(-7rem) scale(1.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ce-rise-card,
+  .ce-rise-glass,
+  .ce-rise-beam {
+    animation: none !important;
+  }
+}

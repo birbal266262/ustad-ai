@@ -26,8 +26,11 @@ const TIMELINE: Array<{ phase: EntryPhase; at: number }> = [
   { phase: "reveal", at: 7200 },
   { phase: "case", at: 9400 },
   { phase: "open", at: 10600 },
-  { phase: "card", at: 11700 },
+  { phase: "card", at: 11500 },
 ];
+
+/** The card must finish rising (and hold a beat) before we hand over. */
+const HANDOVER_AT = 15400;
 
 const CAPTIONS: Record<EntryPhase, string> = {
   draw: "Take aim",
@@ -56,7 +59,7 @@ export function CinematicEntry({ onDone }: { onDone: () => void }) {
       if (finished.current) return;
       finished.current = true;
       setClosing(true);
-      window.setTimeout(onDone, 480);
+      window.setTimeout(onDone, 620);
     };
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -67,7 +70,7 @@ export function CinematicEntry({ onDone }: { onDone: () => void }) {
 
     const timers = TIMELINE.map(({ phase: p, at }) => window.setTimeout(() => setPhase(p), at));
     // Safety: whatever happens on screen, the user always reaches Guest ID.
-    timers.push(window.setTimeout(finish, 13200));
+    timers.push(window.setTimeout(finish, HANDOVER_AT));
 
     const skipOnKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" || e.key === "Enter") finish();
@@ -146,6 +149,17 @@ export function CinematicEntry({ onDone }: { onDone: () => void }) {
             <span className="ce-case-shell" />
             <span className="ce-case-lid">
               <span className="ce-case-handle" />
+            </span>
+          </div>
+        ) : null}
+
+        {phase === "card" ? (
+          <div className="ce-rise-card">
+            <span className="ce-rise-beam" />
+            <span className="ce-rise-glass">
+              <span className="ce-rise-line a" />
+              <span className="ce-rise-line b" />
+              <span className="ce-rise-chip" />
             </span>
           </div>
         ) : null}
