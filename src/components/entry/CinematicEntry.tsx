@@ -152,6 +152,17 @@ export function CinematicEntry({ onDone }: { onDone: () => void }) {
             </span>
           </div>
         ) : null}
+
+        {phase === "card" ? (
+          <div className="ce-rise-card">
+            <span className="ce-rise-beam" />
+            <span className="ce-rise-glass">
+              <span className="ce-rise-line a" />
+              <span className="ce-rise-line b" />
+              <span className="ce-rise-chip" />
+            </span>
+          </div>
+        ) : null}
       </div>
 
       <div className="ce-vignette" aria-hidden="true" />
