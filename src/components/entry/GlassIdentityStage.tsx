@@ -13,7 +13,11 @@ export function GlassIdentityStage({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      if (window.sessionStorage.getItem(ENTRY_REVEAL_KEY) === "1") setActive(true);
+      if (window.sessionStorage.getItem(ENTRY_REVEAL_KEY) === "1") {
+        setActive(true);
+        // one-shot: a later visit shows the plain existing screen
+        window.sessionStorage.removeItem(ENTRY_REVEAL_KEY);
+      }
     } catch {
       /* fall back to the plain screen */
     }
