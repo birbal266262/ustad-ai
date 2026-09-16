@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "./styles/next-ustad.css";
 @import "./styles/cinematic-entry.css";
+@import "./styles/journey-cinematic.css";
 
 @custom-variant dark (&:is(.dark *));
 
