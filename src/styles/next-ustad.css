@@ -844,9 +844,10 @@
     padding: max(0.45rem, env(safe-area-inset-top)) 0.65rem 0.45rem;
     /* backdrop-filter would make this header the containing block for the
        fixed bottom bar below, pinning it to the top of the screen. */
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     background: oklch(1 0 0 / 0.95);
+
     overflow: visible;
   }
 
