@@ -104,7 +104,10 @@ export function AppShell({ children }: { children: ReactNode }) {
       data-nx-page={nextMode ? pageKind : undefined}
     >
       {nextMode ? <div className="nx-grid" aria-hidden="true" /> : null}
-      <aside className="nx-shell-nav sticky top-0 z-30 flex shrink-0 flex-row items-center gap-1 border-b border-sidebar-border bg-sidebar/95 px-2 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] backdrop-blur md:h-screen md:w-60 md:flex-col md:items-stretch md:gap-2 md:overflow-y-auto md:border-r md:border-b-0 md:px-4 md:py-5">
+      {/* No backdrop-blur on mobile: it would create a containing block and
+          pin the fixed bottom nav bar to the top of the screen. */}
+      <aside className="nx-shell-nav sticky top-0 z-30 flex shrink-0 flex-row items-center gap-1 border-b border-sidebar-border bg-sidebar/95 px-2 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] md:h-screen md:w-60 md:flex-col md:items-stretch md:gap-2 md:overflow-y-auto md:border-r md:border-b-0 md:px-4 md:py-5 md:backdrop-blur">
+
         <Link to={nextMode ? "/next" : "/app"} className="nx-shell-brand flex items-center gap-2 md:mb-6" aria-label="USTAD AI app home">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-card ring-1 ring-border">
             <UstadLogo className="size-7" priority />

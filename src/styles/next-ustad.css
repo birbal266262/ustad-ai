@@ -842,7 +842,15 @@
   .nx-app .nx-shell-nav {
     min-height: 3.35rem;
     padding: max(0.45rem, env(safe-area-inset-top)) 0.65rem 0.45rem;
+    /* backdrop-filter would make this header the containing block for the
+       fixed bottom bar below, pinning it to the top of the screen. */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: oklch(1 0 0 / 0.95);
+
+    overflow: visible;
   }
+
 
   .nx-app .nx-shell-brand {
     margin-right: auto;
@@ -893,13 +901,22 @@
   }
 
   .nx-app .nx-page-header {
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .nx-app .nx-page-header > * {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .nx-app .nx-page-header h1 {
     font-size: 1.15rem;
     overflow-wrap: anywhere;
   }
+
 
   .nx-app .panel,
   .nx-app [class*="bg-card/"] {
