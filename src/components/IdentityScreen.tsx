@@ -156,10 +156,27 @@ export function IdentityScreen() {
 
   const networkError = transient || status === "error";
 
-  async function run(action: () => Promise<{ ok: boolean; code?: IdentityErrorCode }>) {
+  /**
+   * Unchanged verification: the EXISTING backend call decides success.
+   * On success we only leave a one-shot visual flag plus the username for the
+   * cinematic transition. The password is never stored, passed or logged.
+   */
+  async function run(
+    action: () => Promise<{ ok: boolean; code?: IdentityErrorCode }>,
+    username?: string,
+  ) {
     setError(null);
     const res = await action();
-    if (!res.ok) setError(errorText((res.code ?? "validation") as IdentityErrorCode, language));
+    if (!res.ok) {
+      setError(errorText((res.code ?? "validation") as IdentityErrorCode, language));
+      return;
+    }
+    try {
+      window.sessionStorage.setItem(JOURNEY_FLAG_KEY, "1");
+      window.sessionStorage.setItem(JOURNEY_NAME_KEY, (username ?? "").slice(0, 24));
+    } catch {
+      /* the cinematic is optional; the app continues exactly as before */
+    }
   }
 
   return (
