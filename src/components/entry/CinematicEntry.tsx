@@ -26,8 +26,11 @@ const TIMELINE: Array<{ phase: EntryPhase; at: number }> = [
   { phase: "reveal", at: 7200 },
   { phase: "case", at: 9400 },
   { phase: "open", at: 10600 },
-  { phase: "card", at: 11700 },
+  { phase: "card", at: 11500 },
 ];
+
+/** The card must finish rising (and hold a beat) before we hand over. */
+const HANDOVER_AT = 15400;
 
 const CAPTIONS: Record<EntryPhase, string> = {
   draw: "Take aim",
