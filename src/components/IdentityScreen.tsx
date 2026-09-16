@@ -37,6 +37,7 @@ import {
   type IdentityErrorCode,
 } from "@/lib/identity-spec";
 import { useIdentityLanguage } from "@/lib/identity-language";
+import { JOURNEY_FLAG_KEY, JOURNEY_NAME_KEY } from "@/components/entry/JourneyCinematic";
 import {
   claimCurrentIdentity,
   createIdentity,
