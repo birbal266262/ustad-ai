@@ -26,7 +26,7 @@ type Phase =
   | "dissolve";
 
 const MAX_LETTERS = 10;
-const HARD_TIMEOUT_MS = 32_000;
+const HARD_TIMEOUT_MS = 45_000;
 
 type Flying = { key: string; char: string; dx: number; dy: number; kind: "drop" | "board" };
 
