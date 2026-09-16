@@ -408,9 +408,9 @@
 }
 
 @keyframes ce-glow-rise {
-  0% { opacity: 0; transform: translate(-50%, 1.5rem) scale(0.5); }
+  0% { opacity: 0; transform: translateY(1.5rem) scale(0.5); }
   60% { opacity: 1; }
-  100% { opacity: 0.9; transform: translate(-50%, -2.5rem) scale(1.25); }
+  100% { opacity: 0.9; transform: translateY(-2.5rem) scale(1.25); }
 }
 
 /* ---------------- controls ---------------- */
