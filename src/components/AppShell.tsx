@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useGuest, shortId } from "@/lib/ustad-client";
 import { IdentityScreen, SecureDeviceNotice } from "@/components/IdentityScreen";
+import { GlassIdentityStage } from "@/components/entry/GlassIdentityStage";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { UstadLogo } from "@/components/UstadLogo";
 import { NotificationCenter } from "@/components/NotificationCenter";
@@ -95,7 +96,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       );
     }
-    return <IdentityScreen />;
+    return (
+      <GlassIdentityStage>
+        <IdentityScreen />
+      </GlassIdentityStage>
+    );
   }
 
   return (
