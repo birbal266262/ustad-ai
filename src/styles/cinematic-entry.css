@@ -24,12 +24,9 @@
 }
 
 .ce-overlay[data-closing="true"] {
-  animation: ce-fade-out 520ms ease-in both;
-}
-
-@keyframes ce-fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  /* Stay opaque until navigation completes. Fading this layer exposed the
+     OPEN USTAD AI button underneath for a split second before Guest ID. */
+  animation: none;
 }
 
 /* ---------------- atmosphere ---------------- */
@@ -706,7 +703,7 @@
 
 /* Hand over on a rise, not a hard cut. */
 .ce-overlay[data-closing="true"] {
-  animation: ce-fade-out 620ms ease-in both;
+  opacity: 1;
 }
 
 .ce-overlay[data-closing="true"] .ce-rise-card {
