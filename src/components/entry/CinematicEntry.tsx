@@ -59,7 +59,7 @@ export function CinematicEntry({ onDone }: { onDone: () => void }) {
       if (finished.current) return;
       finished.current = true;
       setClosing(true);
-      window.setTimeout(onDone, 480);
+      window.setTimeout(onDone, 620);
     };
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
