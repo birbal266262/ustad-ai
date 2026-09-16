@@ -52,6 +52,25 @@ const NAV = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { session, status, ready, hasAccount } = useGuest();
+
+  /*
+   * One-shot cinematic, purely visual. It only runs when the EXISTING identity
+   * flow has just verified successfully (flag written by IdentityScreen) and a
+   * real session exists. It never gates the app: children render underneath.
+   */
+  const [journeyName, setJourneyName] = useState<string | null>(null);
+  useEffect(() => {
+    if (!session) return;
+    try {
+      if (window.sessionStorage.getItem(JOURNEY_FLAG_KEY) !== "1") return;
+      window.sessionStorage.removeItem(JOURNEY_FLAG_KEY);
+      const name = window.sessionStorage.getItem(JOURNEY_NAME_KEY) ?? "";
+      window.sessionStorage.removeItem(JOURNEY_NAME_KEY);
+      setJourneyName(name);
+    } catch {
+      /* no cinematic — the app behaves exactly as before */
+    }
+  }, [session]);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { enabled: nextMode, setEnabled: setNextMode } = useNextMode();
   const pageKind = pathname === "/app"
