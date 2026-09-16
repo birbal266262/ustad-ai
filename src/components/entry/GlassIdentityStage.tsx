@@ -17,8 +17,10 @@ export function GlassIdentityStage({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       if (window.sessionStorage.getItem(ENTRY_REVEAL_KEY) === "1") {
-        // one-shot: a later visit shows the plain existing screen
-        window.sessionStorage.removeItem(ENTRY_REVEAL_KEY);
+        // The flag is NOT consumed here. Identity status can flip
+        // (initializing → unauthenticated) and remount this component; if the
+        // flag were cleared on the first mount the second mount would show the
+        // plain white card. IdentityScreen clears it once login succeeds.
         setMode("cinematic");
         return;
       }

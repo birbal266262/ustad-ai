@@ -37,8 +37,10 @@ function LandingPage() {
     setEntry(true);
   }, []);
 
+  // The overlay must NOT be unmounted before navigating: removing it first
+  // exposed one frame of the hero page. Leaving the route unmounts it for us,
+  // so the cinematic stays on screen until the app route takes over.
   const goToApp = useCallback(() => {
-    setEntry(false);
     void navigate({ to: "/app" });
   }, [navigate]);
 
