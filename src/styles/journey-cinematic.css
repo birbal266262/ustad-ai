@@ -14,7 +14,7 @@
     linear-gradient(180deg, #05070f 0%, #0a1020 45%, #060911 100%);
   color: #eaf1ff;
   /* responsive "medium" scale for the vehicles: never huge, never tiny */
-  --jc-scale: clamp(0.62, 0.42 + 0.26vw, 1.15);
+  --jc-scale: 0.72;
   --jc-ground: 30%;
   contain: strict;
   isolation: isolate;
@@ -730,8 +730,11 @@
 /* ---------------- accessibility / small screens ---------------- */
 
 @media (max-width: 400px) {
-  .jc-stage { --jc-ground: 26%; }
+  .jc-stage { --jc-ground: 26%; --jc-scale: 0.64; }
 }
+@media (min-width: 640px) { .jc-stage { --jc-scale: 0.9; } }
+@media (min-width: 1024px) { .jc-stage { --jc-scale: 1.05; } }
+@media (min-width: 1440px) { .jc-stage { --jc-scale: 1.15; } }
 
 @media (prefers-reduced-motion: reduce) {
   .jc-stage,
