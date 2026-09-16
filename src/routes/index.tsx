@@ -27,6 +27,21 @@ const FEATURES = [
 ];
 
 function LandingPage() {
+  const navigate = useNavigate();
+  const [entry, setEntry] = useState(false);
+
+  // Presentation only: the cinematic sequence just delays the SAME navigation
+  // into the existing USTAD AI. Identity/session logic is untouched.
+  const openUstad = useCallback(() => {
+    markCinematicReveal();
+    setEntry(true);
+  }, []);
+
+  const goToApp = useCallback(() => {
+    setEntry(false);
+    void navigate({ to: "/app" });
+  }, [navigate]);
+
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
     const observer = new IntersectionObserver((entries) => {
