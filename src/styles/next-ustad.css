@@ -642,3 +642,285 @@
     animation: none;
   }
 }
+
+/* ---------- App-wide NEW USTAD AI mode ----------
+ * The existing page DOM and all handlers stay intact. These local semantic
+ * tokens reskin AppShell descendants without changing business logic.
+ */
+.nx-app {
+  --background: oklch(0.992 0.004 225);
+  --foreground: oklch(0.205 0.055 251);
+  --surface: oklch(1 0 0 / 0.82);
+  --surface-2: oklch(0.965 0.018 230);
+  --card: oklch(1 0 0 / 0.78);
+  --card-foreground: oklch(0.205 0.055 251);
+  --popover: oklch(0.995 0.004 225);
+  --popover-foreground: oklch(0.205 0.055 251);
+  --primary: oklch(0.58 0.22 256);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.955 0.024 235);
+  --secondary-foreground: oklch(0.26 0.06 250);
+  --muted: oklch(0.955 0.018 235);
+  --muted-foreground: oklch(0.49 0.045 250);
+  --accent: oklch(0.76 0.13 210);
+  --accent-foreground: oklch(0.2 0.055 251);
+  --border: oklch(0.885 0.035 235 / 0.9);
+  --input: oklch(0.875 0.04 235);
+  --ring: oklch(0.64 0.19 235);
+  --sidebar: oklch(1 0 0 / 0.84);
+  --sidebar-foreground: oklch(0.205 0.055 251);
+  --sidebar-accent: oklch(0.945 0.035 235);
+  --sidebar-accent-foreground: oklch(0.48 0.2 256);
+  --sidebar-border: oklch(0.875 0.04 235 / 0.85);
+  --sidebar-ring: oklch(0.64 0.19 235);
+  isolation: isolate;
+  overflow-x: clip;
+  background-image:
+    radial-gradient(38rem 26rem at 15% -8%, oklch(0.65 0.18 250 / 0.13), transparent 64%),
+    radial-gradient(34rem 24rem at 100% 10%, oklch(0.76 0.13 210 / 0.11), transparent 62%),
+    linear-gradient(180deg, oklch(1 0 0), oklch(0.975 0.012 230) 58%, oklch(0.955 0.022 230));
+  color: var(--foreground);
+}
+
+.nx-app > .nx-grid {
+  position: fixed;
+  z-index: -1;
+}
+
+.nx-app .nx-shell-nav {
+  border-color: color-mix(in oklab, var(--primary) 16%, transparent);
+  background: oklch(1 0 0 / 0.82);
+  box-shadow: 0 1.2rem 3rem -2rem oklch(0.3 0.11 250 / 0.3);
+}
+
+.nx-app .nx-shell-brand {
+  color: var(--foreground);
+}
+
+.nx-app .nx-shell-brand > span:first-child {
+  border-color: color-mix(in oklab, var(--primary) 22%, transparent);
+  background: linear-gradient(145deg, oklch(1 0 0), oklch(0.94 0.035 225));
+  box-shadow: 0 0.7rem 1.5rem -0.9rem oklch(0.55 0.2 250 / 0.65);
+}
+
+.nx-app .gold-text {
+  background-image: linear-gradient(100deg, var(--foreground), var(--primary), oklch(0.72 0.12 78));
+}
+
+.nx-app .nx-shell-link {
+  position: relative;
+  border: 1px solid transparent;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.nx-app .nx-shell-link:hover {
+  border-color: color-mix(in oklab, var(--primary) 16%, transparent);
+  transform: translateY(-1px);
+}
+
+.nx-app .nx-shell-link.is-active {
+  border-color: color-mix(in oklab, var(--primary) 24%, transparent);
+  background: linear-gradient(135deg, color-mix(in oklab, var(--primary) 12%, white), color-mix(in oklab, var(--accent) 10%, white));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.9), 0 0.6rem 1.25rem -1rem oklch(0.55 0.2 250 / 0.65);
+}
+
+.nx-app .nx-shell-link.is-active::before {
+  position: absolute;
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 0.22rem color-mix(in oklab, var(--accent) 20%, transparent);
+  content: "";
+  inset-inline-start: 0.2rem;
+}
+
+.nx-app .nx-shell-main {
+  position: relative;
+  animation: nx-page-enter 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.nx-app .nx-page-header {
+  position: relative;
+  border-color: color-mix(in oklab, var(--primary) 14%, transparent);
+  background: oklch(1 0 0 / 0.62);
+  backdrop-filter: blur(14px) saturate(130%);
+}
+
+.nx-app .nx-page-header::after {
+  position: absolute;
+  right: 1rem;
+  bottom: -1px;
+  left: 1rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 52%, transparent), color-mix(in oklab, var(--accent) 42%, transparent), transparent);
+  content: "";
+}
+
+.nx-app .panel,
+.nx-app [class*="bg-card/"],
+.nx-app [class*="bg-surface"] {
+  border-color: color-mix(in oklab, var(--primary) 16%, transparent);
+  background-color: color-mix(in oklab, var(--card) 88%, transparent);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.95), 0 1.2rem 2.6rem -2rem oklch(0.27 0.09 250 / 0.38);
+  backdrop-filter: blur(14px) saturate(125%);
+}
+
+.nx-app input,
+.nx-app textarea,
+.nx-app select {
+  max-width: 100%;
+  border-color: color-mix(in oklab, var(--primary) 20%, transparent);
+  background: oklch(1 0 0 / 0.78);
+  color: var(--foreground);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.9);
+}
+
+.nx-app input:focus,
+.nx-app textarea:focus,
+.nx-app select:focus {
+  border-color: color-mix(in oklab, var(--primary) 58%, transparent);
+  outline: 2px solid color-mix(in oklab, var(--primary) 18%, transparent);
+  outline-offset: 1px;
+}
+
+.nx-app button,
+.nx-app a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nx-app button:active,
+.nx-app a:active {
+  transform: scale(0.98);
+}
+
+.nx-app [role="tablist"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.nx-app [data-radix-popper-content-wrapper] {
+  color: var(--foreground);
+}
+
+/* Each system keeps one restrained visual personality within the same lab. */
+.nx-app[data-nx-page="ai"] .nx-page-header,
+.nx-app[data-nx-page="learning"] .nx-page-header {
+  background-image: radial-gradient(circle at 18% 0%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 48%);
+}
+
+.nx-app[data-nx-page="shop"] .nx-page-header,
+.nx-app[data-nx-page="crorepati"] .nx-page-header {
+  background-image: radial-gradient(circle at 18% 0%, oklch(0.76 0.12 78 / 0.13), transparent 48%);
+}
+
+.nx-app[data-nx-page="events"] .nx-page-header,
+.nx-app[data-nx-page="tournament"] .nx-page-header {
+  background-image: linear-gradient(100deg, color-mix(in oklab, var(--primary) 8%, transparent), color-mix(in oklab, var(--accent) 8%, transparent));
+}
+
+.nx-app[data-nx-page="notifications"] .nx-page-header::after {
+  animation: nx-live-line 2.8s ease-in-out infinite;
+}
+
+@keyframes nx-page-enter {
+  from { opacity: 0; transform: translateY(0.45rem); filter: blur(3px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes nx-live-line {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 47.99rem) {
+  .nx-app {
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+
+  .nx-app .nx-shell-nav {
+    min-height: 3.35rem;
+    padding: max(0.45rem, env(safe-area-inset-top)) 0.65rem 0.45rem;
+  }
+
+  .nx-app .nx-shell-brand {
+    margin-right: auto;
+  }
+
+  .nx-app .nx-shell-brand > span:nth-child(2) {
+    display: none;
+  }
+
+  .nx-app .nx-shell-links {
+    position: fixed;
+    right: 0.55rem;
+    bottom: max(0.45rem, env(safe-area-inset-bottom));
+    left: 0.55rem;
+    z-index: 50;
+    flex: none;
+    gap: 0.1rem;
+    padding: 0.35rem;
+    border: 1px solid color-mix(in oklab, var(--primary) 18%, transparent);
+    border-radius: 1.1rem;
+    background: oklch(1 0 0 / 0.92);
+    box-shadow: 0 1rem 2.7rem -1rem oklch(0.26 0.09 250 / 0.38);
+    backdrop-filter: blur(15px) saturate(135%);
+  }
+
+  .nx-app .nx-shell-link {
+    min-width: 4.25rem;
+    min-height: 3.35rem;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.8rem;
+  }
+
+  .nx-app .nx-shell-link span {
+    max-width: 4.25rem;
+    overflow: hidden;
+    font-size: 0.65rem;
+    text-overflow: ellipsis;
+  }
+
+  .nx-app .nx-shell-link.is-active::before {
+    top: 0.15rem;
+    right: 38%;
+    left: 38%;
+    width: auto;
+    height: 2px;
+  }
+
+  .nx-app .nx-page-header {
+    align-items: center;
+  }
+
+  .nx-app .nx-page-header h1 {
+    font-size: 1.15rem;
+    overflow-wrap: anywhere;
+  }
+
+  .nx-app .panel,
+  .nx-app [class*="bg-card/"] {
+    backdrop-filter: blur(8px) saturate(115%);
+  }
+}
+
+@media (max-width: 26.875rem) {
+  .nx-app .nx-shell-links {
+    right: 0.35rem;
+    left: 0.35rem;
+  }
+
+  .nx-app .nx-shell-link {
+    min-width: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-app .nx-shell-main,
+  .nx-app[data-nx-page="notifications"] .nx-page-header::after {
+    animation: none;
+  }
+}

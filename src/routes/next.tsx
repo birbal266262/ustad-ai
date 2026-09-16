@@ -31,6 +31,7 @@ import { IdentityScreen } from "@/components/IdentityScreen";
 import { UstadLogo } from "@/components/UstadLogo";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { FutureAiCore } from "@/components/FutureAiCore";
+import { setNextMode } from "@/lib/next-mode";
 import {
   GlassPanel,
   SectionReveal,
@@ -92,6 +93,7 @@ function NextUstadPage() {
   const [compact, setCompact] = useState(false);
 
   useEffect(() => {
+    setNextMode(true);
     const onScroll = () => setCompact(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -185,7 +187,7 @@ function NextUstadPage() {
 
         <SectionReveal delay={40}>
           <GlassPanel className="nx-footer">
-            <Link to="/app" className="nx-chip">
+            <Link to="/app" className="nx-chip" onClick={() => setNextMode(false)}>
               <ArrowLeft className="size-4" /> Back to classic USTAD AI
             </Link>
             <p className="mt-3">Developer by Yusuf Ali</p>

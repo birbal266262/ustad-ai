@@ -36,6 +36,7 @@ import { useSettings, saveProfilePatch } from "@/lib/settings-store";
 import { useIdentityLanguage } from "@/lib/identity-language";
 import { errorText, identityText } from "@/lib/identity-spec";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { setNextMode } from "@/lib/next-mode";
 import { crorepatiProfileStatsFn, crorepatiEntryProfileStatsFn } from "@/lib/crorepati.functions";
 import { walletPanelFn } from "@/lib/wallet.functions";
 import {
@@ -149,6 +150,7 @@ function SettingsPage() {
           <TabsContent value="prefs" className="mt-4 space-y-4">
             <PrefsPanel />
             <PwaInstallCard />
+            <NextModeEntry />
           </TabsContent>
           <TabsContent value="data" className="mt-4">
             <div className="panel space-y-4 p-5">
@@ -868,25 +870,26 @@ function PrefsPanel() {
         </div>
       ))}
 
-      {/*
-       * NEW USTAD AI — a VISUAL MODE of this same app. It opens the existing
-       * routes with the existing session/data; it is not a second app, identity
-       * or database. Every pre-existing preference above stays untouched.
-       */}
-      <div className="nx-pref-entry">
-        <span className="nx-pref-icon" aria-hidden="true">
-          <Sparkles className="size-5" />
-        </span>
-        <div className="min-w-0 space-y-2">
-          <p className="font-display text-sm font-semibold">NEW USTAD AI</p>
-          <p className="text-xs text-muted-foreground">Next-generation USTAD AI experience</p>
-          <Link
-            to="/next"
-            className="inline-flex min-h-10 items-center gap-2 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground transition-transform active:scale-95"
-          >
-            OPEN NEW USTAD AI <ArrowRight className="size-4" />
-          </Link>
-        </div>
+    </div>
+  );
+}
+
+function NextModeEntry() {
+  return (
+    <div className="nx-pref-entry">
+      <span className="nx-pref-icon" aria-hidden="true">
+        <Sparkles className="size-5" />
+      </span>
+      <div className="min-w-0 space-y-2">
+        <p className="font-display text-sm font-semibold">NEW USTAD AI</p>
+        <p className="text-xs text-muted-foreground">Experience the next generation of USTAD AI</p>
+        <Link
+          to="/next"
+          onClick={() => setNextMode(true)}
+          className="inline-flex min-h-10 items-center gap-2 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground transition-transform active:scale-95"
+        >
+          OPEN NEW USTAD AI <ArrowRight className="size-4" />
+        </Link>
       </div>
     </div>
   );
