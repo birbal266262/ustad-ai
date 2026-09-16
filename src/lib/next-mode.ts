@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { applyTheme, getTheme } from "@/lib/theme";
 
 const KEY = "ustad.nextMode";
 
@@ -9,7 +10,15 @@ function readStoredMode(): boolean {
 
 function applyMode(enabled: boolean): void {
   if (typeof document === "undefined") return;
-  document.documentElement.classList.toggle("nx-mode", enabled);
+  const root = document.documentElement;
+  root.classList.toggle("nx-mode", enabled);
+  if (enabled) {
+    root.classList.remove("dark");
+    root.classList.add("light");
+    root.style.colorScheme = "light";
+  } else {
+    applyTheme(getTheme());
+  }
 }
 
 let current = typeof window === "undefined" ? false : readStoredMode();
