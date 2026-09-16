@@ -38,6 +38,7 @@ import {
 } from "@/lib/identity-spec";
 import { useIdentityLanguage } from "@/lib/identity-language";
 import { JOURNEY_FLAG_KEY, JOURNEY_NAME_KEY } from "@/components/entry/JourneyCinematic";
+import { ENTRY_REVEAL_KEY } from "@/components/entry/CinematicEntry";
 import {
   claimCurrentIdentity,
   createIdentity,
@@ -173,6 +174,8 @@ export function IdentityScreen() {
       return;
     }
     try {
+      // The glass presentation flag has served its purpose now.
+      window.sessionStorage.removeItem(ENTRY_REVEAL_KEY);
       window.sessionStorage.setItem(JOURNEY_FLAG_KEY, "1");
       window.sessionStorage.setItem(JOURNEY_NAME_KEY, (username ?? "").slice(0, 24));
     } catch {
