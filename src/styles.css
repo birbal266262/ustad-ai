@@ -154,7 +154,30 @@
        components that need horizontal scroll (code blocks, mobile nav rail)
        use their own overflow-x:auto. */
     overflow-x: clip;
+    /* Android Chrome "font boosting" makes the UI look zoomed in on phones. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
+
+  /* Media and tables can never push the page wider than the viewport. */
+  img,
+  svg,
+  video,
+  canvas,
+  iframe {
+    max-width: 100%;
+  }
+
+  /* iOS/Android zoom into any focused field whose font is under 16px.
+     Keep fields at 16px on touch phones; desktop typography untouched. */
+  @media (max-width: 767px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+
 
   body {
     background-color: var(--color-background);
