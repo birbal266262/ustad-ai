@@ -37,6 +37,7 @@ import {
   type IdentityErrorCode,
 } from "@/lib/identity-spec";
 import { useIdentityLanguage } from "@/lib/identity-language";
+import { JOURNEY_FLAG_KEY, JOURNEY_NAME_KEY } from "@/components/entry/JourneyCinematic";
 import {
   claimCurrentIdentity,
   createIdentity,
@@ -156,10 +157,27 @@ export function IdentityScreen() {
 
   const networkError = transient || status === "error";
 
-  async function run(action: () => Promise<{ ok: boolean; code?: IdentityErrorCode }>) {
+  /**
+   * Unchanged verification: the EXISTING backend call decides success.
+   * On success we only leave a one-shot visual flag plus the username for the
+   * cinematic transition. The password is never stored, passed or logged.
+   */
+  async function run(
+    action: () => Promise<{ ok: boolean; code?: IdentityErrorCode }>,
+    username?: string,
+  ) {
     setError(null);
     const res = await action();
-    if (!res.ok) setError(errorText((res.code ?? "validation") as IdentityErrorCode, language));
+    if (!res.ok) {
+      setError(errorText((res.code ?? "validation") as IdentityErrorCode, language));
+      return;
+    }
+    try {
+      window.sessionStorage.setItem(JOURNEY_FLAG_KEY, "1");
+      window.sessionStorage.setItem(JOURNEY_NAME_KEY, (username ?? "").slice(0, 24));
+    } catch {
+      /* the cinematic is optional; the app continues exactly as before */
+    }
   }
 
   return (
@@ -212,7 +230,7 @@ export function IdentityScreen() {
               submitLabel={t.createGuestId}
               onCancel={() => setMode("choose")}
               onSubmit={async (username, password) => {
-                await run(() => createIdentity(username, password));
+                await run(() => createIdentity(username, password), username);
               }}
             />
           ) : (
@@ -222,7 +240,7 @@ export function IdentityScreen() {
               submitLabel={t.restoreBackup}
               onCancel={() => setMode("choose")}
               onSubmit={async (username, password) => {
-                await run(() => restoreIdentity(username, password));
+                await run(() => restoreIdentity(username, password), username);
               }}
             />
           )}

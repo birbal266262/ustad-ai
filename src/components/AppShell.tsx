@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   MessageSquare,
   GraduationCap,
@@ -21,6 +21,11 @@ import {
 import { useGuest, shortId } from "@/lib/ustad-client";
 import { IdentityScreen, SecureDeviceNotice } from "@/components/IdentityScreen";
 import { GlassIdentityStage } from "@/components/entry/GlassIdentityStage";
+import {
+  JourneyCinematic,
+  JOURNEY_FLAG_KEY,
+  JOURNEY_NAME_KEY,
+} from "@/components/entry/JourneyCinematic";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { UstadLogo } from "@/components/UstadLogo";
 import { NotificationCenter } from "@/components/NotificationCenter";
@@ -47,6 +52,25 @@ const NAV = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { session, status, ready, hasAccount } = useGuest();
+
+  /*
+   * One-shot cinematic, purely visual. It only runs when the EXISTING identity
+   * flow has just verified successfully (flag written by IdentityScreen) and a
+   * real session exists. It never gates the app: children render underneath.
+   */
+  const [journeyName, setJourneyName] = useState<string | null>(null);
+  useEffect(() => {
+    if (!session) return;
+    try {
+      if (window.sessionStorage.getItem(JOURNEY_FLAG_KEY) !== "1") return;
+      window.sessionStorage.removeItem(JOURNEY_FLAG_KEY);
+      const name = window.sessionStorage.getItem(JOURNEY_NAME_KEY) ?? "";
+      window.sessionStorage.removeItem(JOURNEY_NAME_KEY);
+      setJourneyName(name);
+    } catch {
+      /* no cinematic — the app behaves exactly as before */
+    }
+  }, [session]);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { enabled: nextMode, setEnabled: setNextMode } = useNextMode();
   const pageKind = pathname === "/app"
@@ -109,6 +133,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       data-nx-page={nextMode ? pageKind : undefined}
     >
       {nextMode ? <div className="nx-grid" aria-hidden="true" /> : null}
+      {journeyName !== null ? (
+        <JourneyCinematic username={journeyName} onFinish={() => setJourneyName(null)} />
+      ) : null}
       {/* No backdrop-blur on mobile: it would create a containing block and
           pin the fixed bottom nav bar to the top of the screen. */}
       <aside className="nx-shell-nav sticky top-0 z-30 flex shrink-0 flex-row items-center gap-1 border-b border-sidebar-border bg-sidebar/95 px-2 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] md:h-screen md:w-60 md:flex-col md:items-stretch md:gap-2 md:overflow-y-auto md:border-r md:border-b-0 md:px-4 md:py-5 md:backdrop-blur">
