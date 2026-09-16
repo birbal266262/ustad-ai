@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { useGuest, shortId } from "@/lib/ustad-client";
 import { IdentityScreen } from "@/components/IdentityScreen";
+import { GlassIdentityStage } from "@/components/entry/GlassIdentityStage";
 import { UstadLogo } from "@/components/UstadLogo";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { FutureAiCore } from "@/components/FutureAiCore";
@@ -111,7 +112,11 @@ function NextUstadPage() {
         </div>
       );
     }
-    return <IdentityScreen />;
+    return (
+      <GlassIdentityStage>
+        <IdentityScreen />
+      </GlassIdentityStage>
+    );
   }
 
   const displayName = username || (guestId ? shortId(guestId) : "Learner");
