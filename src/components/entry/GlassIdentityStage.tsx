@@ -9,21 +9,30 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ENTRY_REVEAL_KEY } from "@/components/entry/CinematicEntry";
 
 export function GlassIdentityStage({ children }: { children: ReactNode }) {
-  const [active, setActive] = useState(false);
+  // Keep the first client paint neutral while sessionStorage is checked.
+  // Rendering `children` first caused the normal Guest ID page to flash at the
+  // old landing-page position before the cinematic wrapper was mounted.
+  const [mode, setMode] = useState<"checking" | "plain" | "cinematic">("checking");
 
   useEffect(() => {
     try {
       if (window.sessionStorage.getItem(ENTRY_REVEAL_KEY) === "1") {
-        setActive(true);
         // one-shot: a later visit shows the plain existing screen
         window.sessionStorage.removeItem(ENTRY_REVEAL_KEY);
+        setMode("cinematic");
+        return;
       }
     } catch {
       /* fall back to the plain screen */
     }
+    setMode("plain");
   }, []);
 
-  if (!active) return <>{children}</>;
+  if (mode === "checking") {
+    return <div className="ce-id-pending" aria-hidden="true" />;
+  }
+
+  if (mode === "plain") return <>{children}</>;
 
   return (
     <div className="ce-id-stage">
