@@ -134,7 +134,7 @@ function RootShell({ children }: { children: ReactNode }) {
             can never be flipped by a later render or by the OS preference. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var m=localStorage.getItem("ustad.theme")||"system";var d=m==="dark"||(m==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;r.classList.toggle("dark",d);r.classList.toggle("light",!d);r.style.colorScheme=d?"dark":"light";}catch(e){}})();`,
+            __html: `(function(){try{var m=localStorage.getItem("ustad.theme")||"system";var n=localStorage.getItem("ustad.nextMode")==="1";var d=!n&&(m==="dark"||(m==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches));var r=document.documentElement;r.classList.toggle("nx-mode",n);r.classList.toggle("dark",d);r.classList.toggle("light",n||!d);r.style.colorScheme=n?"light":d?"dark":"light";}catch(e){}})();`,
           }}
         />
       </head>
