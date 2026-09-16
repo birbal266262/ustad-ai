@@ -108,6 +108,9 @@ export function AppShell({ children }: { children: ReactNode }) {
    */
   if (!ready || !session) {
     if (status === "idle" || status === "initializing" || status === "recovering") {
+      // Coming straight out of the cinematic, a bright splash would read as a
+      // flash between the suitcase card and the glass Guest ID card.
+      if (entryPending) return <div className="ce-id-pending" aria-hidden="true" />;
       return (
         <div
           className="flex min-h-[100dvh] w-full items-center justify-center bg-background"
