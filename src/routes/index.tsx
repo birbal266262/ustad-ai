@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowDown, ArrowRight, BrainCircuit, Medal, Swords } from "lucide-react";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import heroAsset from "@/assets/ustad-yusuf-hero.png.asset.json";
 import { FutureAiCore } from "@/components/FutureAiCore";
+import { CinematicEntry, markCinematicReveal } from "@/components/entry/CinematicEntry";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
