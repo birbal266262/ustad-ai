@@ -70,7 +70,7 @@ export function CinematicEntry({ onDone }: { onDone: () => void }) {
 
     const timers = TIMELINE.map(({ phase: p, at }) => window.setTimeout(() => setPhase(p), at));
     // Safety: whatever happens on screen, the user always reaches Guest ID.
-    timers.push(window.setTimeout(finish, 13200));
+    timers.push(window.setTimeout(finish, HANDOVER_AT));
 
     const skipOnKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" || e.key === "Enter") finish();
