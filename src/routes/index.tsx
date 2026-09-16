@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowDown, ArrowRight, BrainCircuit, Medal, Swords } from "lucide-react";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import heroAsset from "@/assets/ustad-yusuf-hero.png.asset.json";
 import { FutureAiCore } from "@/components/FutureAiCore";
+import { CinematicEntry, markCinematicReveal } from "@/components/entry/CinematicEntry";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -26,6 +27,21 @@ const FEATURES = [
 ];
 
 function LandingPage() {
+  const navigate = useNavigate();
+  const [entry, setEntry] = useState(false);
+
+  // Presentation only: the cinematic sequence just delays the SAME navigation
+  // into the existing USTAD AI. Identity/session logic is untouched.
+  const openUstad = useCallback(() => {
+    markCinematicReveal();
+    setEntry(true);
+  }, []);
+
+  const goToApp = useCallback(() => {
+    setEntry(false);
+    void navigate({ to: "/app" });
+  }, [navigate]);
+
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
     const observer = new IntersectionObserver((entries) => {
@@ -101,10 +117,11 @@ function LandingPage() {
           <p className="landing-cta-eyebrow">Your journey starts here</p>
           <h2 id="cta-title">Ready to enter?</h2>
           <p>Experience USTAD AI</p>
-          <Button asChild className="landing-open-button"><Link to="/app">Open USTAD AI <ArrowRight aria-hidden="true" /></Link></Button>
+          <Button type="button" className="landing-open-button" onClick={openUstad}>Open USTAD AI <ArrowRight aria-hidden="true" /></Button>
         </div>
         <p className="landing-signature">Designed & developed by Yusuf Ali</p>
       </section>
+      {entry ? <CinematicEntry onDone={goToApp} /> : null}
     </main>
   );
 }
