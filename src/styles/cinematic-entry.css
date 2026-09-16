@@ -1,0 +1,543 @@
+/*
+ * USTAD AI — cinematic OPEN USTAD AI entry.
+ * Pure CSS/2.5D layers (no WebGL, no heavy assets) so mobile stays fast.
+ * Only presentation: no app logic depends on anything in this file.
+ */
+
+.ce-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 18%, oklch(0.32 0.06 245) 0%, oklch(0.14 0.04 250) 55%, oklch(0.08 0.02 250) 100%);
+  color: oklch(0.96 0.01 240);
+  animation: ce-fade-in 420ms ease-out both;
+  contain: strict;
+  touch-action: none;
+}
+
+@keyframes ce-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ce-overlay[data-closing="true"] {
+  animation: ce-fade-out 520ms ease-in both;
+}
+
+@keyframes ce-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ---------------- atmosphere ---------------- */
+
+.ce-fog,
+.ce-vignette,
+.ce-grid,
+.ce-dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ce-fog {
+  background:
+    radial-gradient(60% 40% at 50% 70%, oklch(0.7 0.08 225 / 0.16), transparent 70%),
+    radial-gradient(40% 30% at 20% 40%, oklch(0.7 0.05 250 / 0.12), transparent 70%);
+  filter: blur(6px);
+}
+
+.ce-vignette {
+  background: radial-gradient(70% 60% at 50% 50%, transparent 40%, oklch(0.05 0.02 250 / 0.85) 100%);
+}
+
+/* Perspective floor grid — supplies the forward-travel depth cue. */
+.ce-grid {
+  top: 52%;
+  background-image:
+    repeating-linear-gradient(to right, oklch(0.75 0.1 225 / 0.22) 0 1px, transparent 1px 7%),
+    repeating-linear-gradient(to bottom, oklch(0.75 0.1 225 / 0.2) 0 1px, transparent 1px 12%);
+  transform-origin: 50% 0;
+  transform: perspective(28rem) rotateX(72deg);
+  mask-image: linear-gradient(to bottom, oklch(0 0 0 / 0.9), transparent 85%);
+  opacity: 0.5;
+}
+
+.ce-overlay[data-phase="travel"] .ce-grid,
+.ce-overlay[data-phase="reveal"] .ce-grid {
+  animation: ce-grid-rush 1.1s linear infinite;
+}
+
+@keyframes ce-grid-rush {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 0, 0 12%; }
+}
+
+/* Depth pillars rushing past the camera. */
+.ce-pillar {
+  position: absolute;
+  bottom: 12%;
+  width: 4.2rem;
+  border-radius: 0.6rem;
+  background: linear-gradient(180deg, oklch(0.55 0.07 240 / 0.5), oklch(0.2 0.04 250 / 0.9));
+  box-shadow: inset 0 0 2rem oklch(0.8 0.12 225 / 0.16);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.ce-overlay[data-phase="travel"] .ce-pillar,
+.ce-overlay[data-phase="reveal"] .ce-pillar {
+  animation: ce-pillar-pass 2.4s linear infinite;
+}
+
+@keyframes ce-pillar-pass {
+  0% { transform: translate3d(0, 0, 0) scale(0.18); opacity: 0; filter: blur(2px); }
+  25% { opacity: 0.85; }
+  100% { transform: translate3d(var(--ce-drift, -40vw), 8vh, 0) scale(3.2); opacity: 0; filter: blur(5px); }
+}
+
+.ce-dust {
+  background-image:
+    radial-gradient(1.6px 1.6px at 18% 30%, oklch(0.95 0.04 225 / 0.7), transparent 60%),
+    radial-gradient(1.4px 1.4px at 72% 22%, oklch(0.95 0.04 225 / 0.55), transparent 60%),
+    radial-gradient(1.8px 1.8px at 44% 66%, oklch(0.95 0.04 225 / 0.5), transparent 60%),
+    radial-gradient(1.3px 1.3px at 86% 58%, oklch(0.95 0.04 225 / 0.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 30% 82%, oklch(0.95 0.04 225 / 0.4), transparent 60%);
+  animation: ce-dust-drift 9s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes ce-dust-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -12vh, 0); }
+}
+
+/* ---------------- stage ---------------- */
+
+.ce-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 40rem;
+}
+
+.ce-figure {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  translate: -50% 0;
+  transform-origin: 50% 100%;
+}
+
+/* Archer */
+.ce-archer {
+  width: 9rem;
+  height: 13rem;
+  opacity: 0;
+  animation: ce-archer-in 700ms ease-out 120ms both;
+}
+
+.ce-overlay[data-phase="travel"] .ce-archer,
+.ce-overlay[data-phase="reveal"] .ce-archer,
+.ce-overlay[data-phase="case"] .ce-archer,
+.ce-overlay[data-phase="open"] .ce-archer {
+  animation: ce-archer-out 520ms ease-in both;
+}
+
+@keyframes ce-archer-in {
+  from { opacity: 0; transform: translateY(1.4rem) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes ce-archer-out {
+  from { opacity: 1; transform: scale(1); filter: blur(0); }
+  to { opacity: 0; transform: scale(2.4); filter: blur(10px); }
+}
+
+.ce-body {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 1.2rem 1.4rem oklch(0.05 0.02 250 / 0.7));
+}
+
+.ce-head,
+.ce-torso,
+.ce-leg,
+.ce-arm {
+  position: absolute;
+  background: linear-gradient(160deg, oklch(0.52 0.05 245), oklch(0.2 0.03 250));
+  box-shadow: inset -0.25rem 0 0.7rem oklch(0.05 0.02 250 / 0.7), inset 0.2rem 0 0.6rem oklch(0.85 0.09 225 / 0.22);
+}
+
+.ce-head { left: 44%; top: 2%; width: 15%; height: 12%; border-radius: 50%; }
+.ce-torso { left: 38%; top: 13%; width: 26%; height: 40%; border-radius: 1.2rem 1.2rem 0.6rem 0.6rem; }
+.ce-leg { top: 52%; width: 12%; height: 48%; border-radius: 0.5rem; }
+.ce-leg.a { left: 39%; transform-origin: 50% 0; rotate: 6deg; }
+.ce-leg.b { left: 51%; transform-origin: 50% 0; rotate: -8deg; }
+.ce-arm { top: 17%; width: 10%; height: 30%; border-radius: 0.5rem; transform-origin: 50% 8%; }
+.ce-arm.front { left: 58%; rotate: -78deg; }
+.ce-arm.back { left: 32%; rotate: 62deg; animation: ce-draw 1.5s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+
+@keyframes ce-draw {
+  0% { rotate: 74deg; }
+  70% { rotate: 52deg; }
+  88% { rotate: 50deg; }
+  100% { rotate: 96deg; }
+}
+
+.ce-bow {
+  position: absolute;
+  left: 62%;
+  top: 8%;
+  width: 3.4rem;
+  height: 9rem;
+  border-right: 0.22rem solid oklch(0.8 0.09 92);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 0.6rem oklch(0.82 0.1 92 / 0.5));
+  animation: ce-bow-flex 1.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes ce-bow-flex {
+  0% { transform: scaleX(1); }
+  70% { transform: scaleX(1.35); }
+  88% { transform: scaleX(1.38); }
+  100% { transform: scaleX(0.95); }
+}
+
+.ce-string {
+  position: absolute;
+  left: 62%;
+  top: 8%;
+  width: 0.08rem;
+  height: 9rem;
+  background: oklch(0.95 0.02 230 / 0.85);
+  transform-origin: 50% 50%;
+  animation: ce-string 1.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes ce-string {
+  0% { transform: skewX(0deg); }
+  70% { transform: skewX(-16deg); }
+  88% { transform: skewX(-17deg); }
+  100% { transform: skewX(3deg); }
+}
+
+/* Arrow travelling toward the vanishing point, camera riding with it. */
+.ce-arrow {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 7rem;
+  height: 0.28rem;
+  translate: -50% -50%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, oklch(0.9 0.1 92 / 0.1), oklch(0.93 0.11 92), oklch(1 0 0));
+  box-shadow: 0 0 1.2rem oklch(0.9 0.12 92 / 0.8);
+  opacity: 0;
+}
+
+.ce-arrow::after {
+  content: "";
+  position: absolute;
+  right: -0.45rem;
+  top: 50%;
+  translate: 0 -50%;
+  border-left: 0.6rem solid oklch(1 0 0);
+  border-top: 0.32rem solid transparent;
+  border-bottom: 0.32rem solid transparent;
+}
+
+.ce-overlay[data-phase="travel"] .ce-arrow,
+.ce-overlay[data-phase="reveal"] .ce-arrow {
+  animation: ce-arrow-ride 1.6s ease-in-out infinite alternate;
+  opacity: 1;
+}
+
+@keyframes ce-arrow-ride {
+  from { transform: translate3d(-0.8rem, 0.5rem, 0) scale(0.98); }
+  to { transform: translate3d(0.8rem, -0.5rem, 0) scale(1.02); }
+}
+
+.ce-speed {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: repeating-conic-gradient(from 0deg at 50% 52%, oklch(0.95 0.03 225 / 0.12) 0deg 1deg, transparent 1deg 9deg);
+  mask-image: radial-gradient(45% 45% at 50% 52%, transparent 30%, oklch(0 0 0 / 1) 100%);
+}
+
+.ce-overlay[data-phase="travel"] .ce-speed,
+.ce-overlay[data-phase="reveal"] .ce-speed {
+  opacity: 1;
+  animation: ce-speed-zoom 1.2s linear infinite;
+}
+
+@keyframes ce-speed-zoom {
+  from { transform: scale(1); opacity: 0.35; }
+  to { transform: scale(1.9); opacity: 0; }
+}
+
+/* Character with suitcase */
+.ce-walker {
+  width: 8.5rem;
+  height: 14rem;
+  opacity: 0;
+  transform-origin: 50% 100%;
+}
+
+.ce-overlay[data-phase="reveal"] .ce-walker {
+  animation: ce-walker-approach 2.6s cubic-bezier(0.24, 0.6, 0.3, 1) both;
+}
+
+.ce-overlay[data-phase="case"] .ce-walker,
+.ce-overlay[data-phase="open"] .ce-walker,
+.ce-overlay[data-phase="card"] .ce-walker {
+  animation: ce-walker-fall 1.1s cubic-bezier(0.4, 0, 0.6, 1) both;
+}
+
+@keyframes ce-walker-approach {
+  0% { opacity: 0; transform: translateY(-1.5rem) scale(0.22); filter: blur(4px); }
+  45% { opacity: 1; filter: blur(0.6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes ce-walker-fall {
+  0% { opacity: 1; transform: rotate(0deg) translateY(0); }
+  35% { transform: rotate(-6deg) translateY(-0.4rem); }
+  100% { opacity: 0; transform: rotate(-78deg) translateY(1.2rem); }
+}
+
+.ce-walker .ce-arm.back { animation: none; rotate: 20deg; }
+.ce-walker .ce-arm.front { rotate: -14deg; }
+
+/* Suitcase */
+.ce-case {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  width: clamp(8rem, 34vw, 15rem);
+  aspect-ratio: 8 / 5;
+  translate: -50% -50%;
+  opacity: 0;
+  transform-origin: 50% 100%;
+}
+
+.ce-overlay[data-phase="case"] .ce-case,
+.ce-overlay[data-phase="open"] .ce-case,
+.ce-overlay[data-phase="card"] .ce-case {
+  animation: ce-case-drop 1.2s cubic-bezier(0.32, 1.4, 0.5, 1) both;
+}
+
+@keyframes ce-case-drop {
+  0% { opacity: 0; transform: translate3d(2.5rem, -7rem, 0) rotate(26deg) scale(0.72); }
+  55% { opacity: 1; }
+  78% { transform: translate3d(0, 0.5rem, 0) rotate(-2deg) scale(1.02); }
+  100% { opacity: 1; transform: none; }
+}
+
+.ce-case-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.9rem;
+  border: 1px solid oklch(0.85 0.05 225 / 0.45);
+  background:
+    linear-gradient(170deg, oklch(0.42 0.04 245), oklch(0.19 0.03 250) 60%, oklch(0.26 0.03 250));
+  box-shadow:
+    0 2rem 3rem -1.4rem oklch(0.03 0.02 250 / 0.9),
+    inset 0 0 2rem oklch(0.85 0.1 225 / 0.14);
+}
+
+.ce-case-shell::after {
+  content: "";
+  position: absolute;
+  inset: 12% 8%;
+  border-radius: 0.5rem;
+  border: 1px solid oklch(0.85 0.06 225 / 0.22);
+}
+
+.ce-case-lid {
+  position: absolute;
+  inset: 0 0 52% 0;
+  border-radius: 0.9rem 0.9rem 0.3rem 0.3rem;
+  border: 1px solid oklch(0.88 0.06 225 / 0.5);
+  background: linear-gradient(160deg, oklch(0.5 0.05 243), oklch(0.24 0.03 250));
+  transform-origin: 50% 100%;
+  box-shadow: inset 0 0.4rem 1.4rem oklch(0.9 0.1 225 / 0.16);
+}
+
+.ce-overlay[data-phase="open"] .ce-case-lid,
+.ce-overlay[data-phase="card"] .ce-case-lid {
+  animation: ce-lid-open 900ms cubic-bezier(0.3, 0.9, 0.3, 1) both;
+}
+
+@keyframes ce-lid-open {
+  0% { transform: rotateX(0deg); }
+  12% { transform: rotateX(-4deg); }
+  100% { transform: rotateX(-108deg); }
+}
+
+.ce-case-handle {
+  position: absolute;
+  left: 50%;
+  top: -0.9rem;
+  width: 3.4rem;
+  height: 1.1rem;
+  translate: -50% 0;
+  border: 0.22rem solid oklch(0.78 0.06 92 / 0.8);
+  border-bottom: none;
+  border-radius: 0.8rem 0.8rem 0 0;
+}
+
+.ce-case-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 40%;
+  width: 70%;
+  height: 8rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, oklch(0.92 0.12 210 / 0.75), transparent 75%);
+  opacity: 0;
+  filter: blur(4px);
+}
+
+.ce-overlay[data-phase="open"] .ce-case-glow,
+.ce-overlay[data-phase="card"] .ce-case-glow {
+  animation: ce-glow-rise 1.4s ease-out 350ms both;
+}
+
+@keyframes ce-glow-rise {
+  0% { opacity: 0; transform: translate(-50%, 1.5rem) scale(0.5); }
+  60% { opacity: 1; }
+  100% { opacity: 0.9; transform: translate(-50%, -2.5rem) scale(1.25); }
+}
+
+/* ---------------- controls ---------------- */
+
+.ce-skip {
+  position: absolute;
+  right: max(0.9rem, env(safe-area-inset-right));
+  top: max(0.9rem, env(safe-area-inset-top));
+  z-index: 4;
+  min-height: 2.6rem;
+  padding: 0 1.1rem;
+  border: 1px solid oklch(0.9 0.04 225 / 0.4);
+  border-radius: 999px;
+  background: oklch(0.2 0.03 250 / 0.55);
+  color: oklch(0.97 0.01 240);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+}
+
+.ce-caption {
+  position: absolute;
+  left: 50%;
+  bottom: max(1.6rem, env(safe-area-inset-bottom));
+  translate: -50% 0;
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: oklch(0.9 0.04 225 / 0.75);
+}
+
+/* ---------------- luxury glass Guest ID stage ---------------- */
+
+.ce-id-stage {
+  position: relative;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(120% 70% at 50% 6%, oklch(0.36 0.06 243) 0%, oklch(0.16 0.04 250) 58%, oklch(0.09 0.02 250) 100%);
+}
+
+.ce-id-stage .ce-fog,
+.ce-id-stage .ce-dust,
+.ce-id-stage .ce-vignette {
+  position: fixed;
+}
+
+.ce-id-case {
+  position: fixed;
+  left: 50%;
+  top: 68%;
+  width: clamp(9rem, 32vw, 14rem);
+  aspect-ratio: 8 / 5;
+  translate: -50% -50%;
+  pointer-events: none;
+  opacity: 0.85;
+  animation: ce-id-case-settle 900ms ease-out both;
+}
+
+@keyframes ce-id-case-settle {
+  from { opacity: 0; transform: translateY(1.4rem) scale(0.9); }
+  to { opacity: 0.85; transform: none; }
+}
+
+.ce-id-card {
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
+  width: min(100%, 30rem);
+  padding: 0.35rem;
+  border-radius: 1.6rem;
+  border: 1px solid oklch(0.95 0.03 225 / 0.42);
+  background: linear-gradient(150deg, oklch(1 0 0 / 0.2), oklch(0.8 0.05 230 / 0.08) 48%, oklch(1 0 0 / 0.14));
+  box-shadow:
+    0 2.2rem 4rem -1.6rem oklch(0.04 0.02 250 / 0.85),
+    inset 0 1px 0 oklch(1 0 0 / 0.45),
+    inset 0 -1px 0 oklch(1 0 0 / 0.18);
+  backdrop-filter: blur(18px) saturate(135%);
+  animation: ce-card-emerge 1.1s cubic-bezier(0.22, 0.85, 0.3, 1) both;
+}
+
+@keyframes ce-card-emerge {
+  0% { opacity: 0; transform: translateY(5rem) rotateX(34deg) rotateZ(-4deg) scale(0.82); filter: blur(8px); }
+  60% { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
+}
+
+.ce-id-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 32%, oklch(1 0 0 / 0.22) 47%, transparent 62%);
+  pointer-events: none;
+}
+
+.ce-id-inner {
+  position: relative;
+  border-radius: 1.3rem;
+  background: oklch(1 0 0 / 0.06);
+  overflow: hidden;
+}
+
+/* The EXISTING Guest ID screen lives untouched inside the glass card;
+   only the surrounding chrome is neutralised so it reads as one panel. */
+.ce-id-inner > * {
+  min-height: 0 !important;
+  background: transparent !important;
+}
+
+.ce-id-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 100dvh;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.9rem, 4vw, 2.5rem) clamp(0.75rem, 4vw, 2rem) 6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ce-overlay *,
+  .ce-id-card,
+  .ce-id-case {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
